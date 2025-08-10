@@ -1,4 +1,3 @@
-```markdown
 # Fractal Algebra
 
 A Rust framework for modular, recursive, and entropy-aware algebraic structures inspired by fractals, resonance, and cosmological symmetry.
@@ -60,7 +59,6 @@ Neil Crago — experimental mathematician, Rust architect, and philosophical exp
 ## 📄 License
 
 MIT
-```
 
 ---
 
