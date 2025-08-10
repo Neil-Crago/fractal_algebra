@@ -1,7 +1,7 @@
 //! A module defining algebraic operations for fractal structures.
 
 use crate::field::FractalField;
-use crate::edge::FractalEdge;
+use crate::graphedge::GraphEdge;
 use crate::traits::FractalAlgebra;
 use num_complex::Complex;
 
@@ -11,10 +11,12 @@ impl FractalAlgebra for FractalField {
         let mut result = Vec::new();
 
         for edge in &self.edges {
-            if let Some(matching) = other.edges.iter().find(|e2| 
-                e2.origin == edge.origin && e2.direction == edge.direction
-            ) {
-                result.push(FractalEdge {
+            if let Some(matching) = other
+                .edges
+                .iter()
+                .find(|e2| e2.origin == edge.origin && e2.direction == edge.direction)
+            {
+                result.push(GraphEdge {
                     origin: edge.origin,
                     direction: edge.direction,
                     length: edge.length,
@@ -30,10 +32,14 @@ impl FractalAlgebra for FractalField {
     }
 
     fn scale(&self, factor: Complex<f32>) -> Self {
-        let edges = self.edges.iter().map(|e| FractalEdge {
-            data: e.data * factor,
-            ..*e
-        }).collect();
+        let edges = self
+            .edges
+            .iter()
+            .map(|e| GraphEdge {
+                data: e.data * factor,
+                ..*e
+            })
+            .collect();
 
         FractalField { edges }
     }
@@ -42,10 +48,12 @@ impl FractalAlgebra for FractalField {
         let mut result = Vec::new();
 
         for edge in &self.edges {
-            if let Some(matching) = other.edges.iter().find(|e2| 
-                e2.origin == edge.origin && e2.direction == edge.direction
-            ) {
-                result.push(FractalEdge {
+            if let Some(matching) = other
+                .edges
+                .iter()
+                .find(|e2| e2.origin == edge.origin && e2.direction == edge.direction)
+            {
+                result.push(GraphEdge {
                     origin: edge.origin,
                     direction: edge.direction,
                     length: edge.length * matching.length,
