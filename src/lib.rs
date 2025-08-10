@@ -21,3 +21,6 @@ pub use tests::{
 };
 pub use traits::{FractalAlgebra, FractalRing};
 pub use vec3::Vec3;
+
+#[macro_use]
+mod macros;

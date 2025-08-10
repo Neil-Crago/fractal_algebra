@@ -1,6 +1,5 @@
 use crate::field::FractalField;
 use crate::graphedge::GraphEdge;
-use crate::traits::FractalAlgebra;
 use crate::vec3::Vec3;
 use num_complex::Complex;
 
