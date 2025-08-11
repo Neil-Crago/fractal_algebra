@@ -1,6 +1,8 @@
 //! defines the Vec3 struct
 
-use std::ops::{Add, Mul, Neg, Sub};
+use std::ops::{Add, Mul, Neg, Rem, Sub};
+use rand::Rng;
+
 
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub struct Vec3 {
@@ -50,9 +52,46 @@ impl Vec3 {
         self.dot(self).sqrt()
     }
 
+    
+    pub fn zero() -> Self {
+        Vec3 { x: 0.0, y: 0.0, z: 0.0 }
+    }
+
     pub fn normalize(&self) -> Self {
-        let n = self.norm();
-        if n == 0.0 { *self } else { *self * (1.0 / n) }
+        let mag = (self.x * self.x + self.y * self.y + self.z * self.z).sqrt();
+        if mag > 1e-6 {
+            Vec3 {
+                x: self.x / mag,
+                y: self.y / mag,
+                z: self.z / mag,
+            }
+        } else {
+            Vec3::zero()
+        }
+    }
+
+
+
+    pub fn random() -> Self {
+        let mut rng = rand::rng();
+        Vec3 {
+            x: rng.random_range(-1.0..1.0),
+            y: rng.random_range(-1.0..1.0),
+            z: rng.random_range(-1.0..1.0),
+        }
+}
+
+    pub fn unit_x() -> Self {
+        Vec3 { x: 1.0, y: 0.0, z: 0.0 }
+    }
+
+
+    pub fn unit_y() -> Self {
+        Vec3 { x: 0.0, y: 1.0, z: 0.0 }
+    }
+
+    pub fn unit_z() -> Self {
+        Vec3 { x: 0.0, y: 0.0, z: 1.0 }
     }
 }
 
@@ -100,6 +139,18 @@ impl Mul<f32> for Vec3 {
             x: self.x * scalar,
             y: self.y * scalar,
             z: self.z * scalar,
+        }
+    }
+}
+
+impl Rem<f32> for Vec3 {
+    type Output = Self;
+
+    fn rem(self, rhs: f32) -> Self::Output {
+        Vec3 {
+            x: self.x % rhs,
+            y: self.y % rhs,
+            z: self.z % rhs,
         }
     }
 }

@@ -1,7 +1,6 @@
 //! defines the tests for associativity and distributivity
 
 use crate::field::FractalField;
-use crate::traits::FractalAlgebra;
 use num_complex::Complex;
 
 pub fn test_associativity(a: &FractalField, b: &FractalField, c: &FractalField) -> bool {

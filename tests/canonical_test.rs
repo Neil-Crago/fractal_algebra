@@ -1,4 +1,3 @@
-use fractal_algebra::FractalAlgebra;
 use fractal_algebra::field::FractalField;
 use fractal_algebra::test_vector_space_axioms;
 use fractal_algebra::testkit::canonical_test_fractal;

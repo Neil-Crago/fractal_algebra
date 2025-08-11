@@ -8,6 +8,14 @@ pub mod testkit;
 pub mod tests;
 pub mod traits;
 pub mod vec3;
+pub mod signature;
+pub mod critics;
+pub mod rfg;
+pub mod criticloop;
+pub mod stochastic;
+pub mod evolutionary;
+pub mod mutation;
+pub mod looprep;
 
 pub use constants::MODULUS;
 pub use field::FractalField;
@@ -21,6 +29,14 @@ pub use tests::{
 };
 pub use traits::{FractalAlgebra, FractalRing};
 pub use vec3::Vec3;
+pub use signature::FractalSignature;
+pub use critics::CriticSuite;
+pub use rfg::RandomFieldGenerator;
+pub use criticloop::GeneratorCriticLoop;
+pub use stochastic::StochasticAmplitudePhase;
+pub use evolutionary::EvolutionaryGenerator;
+pub use mutation::MutationSuite;
+pub use looprep::LoopReport;
 
 #[macro_use]
 mod macros;
