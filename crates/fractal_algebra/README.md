@@ -1,77 +1,46 @@
-# Fractal Algebra
+# Fractal Algebra Workspace
 
-A Rust framework for modular, recursive, and entropy-aware algebraic structures inspired by fractals, resonance, and cosmological symmetry.
+**A research workspace for exploring the deep connections between number theory, algebra, and geometry.**
 
-## ✨ Overview
+This project is a journey into the structures that emerge from simple mathematical rules. It began as an engine for generating classic fractals and has evolved into a dual-purpose workspace for both practical computation and theoretical exploration.
 
-This project explores the intersection of algebra, geometry, and modular resonance through code. It defines a vector space over ℂ (`Complex<f32>`) using spatially distributed edge structures, and builds trait-based abstractions for algebraic operations, ring axioms, and fractal composition.
+## Core Projects
 
-### Philosophy
+This workspace is structured as a Rust workspace containing several distinct but related crates:
 
-Fractal Algebra is a meditation on mathematical beauty, modular coherence, and the recursive nature of structure. It seeks to formalize the intuition that symmetry, resonance, and entropy are not merely physical phenomena, but algebraic principles waiting to be encoded.
+### 1. `factorial_engine`
 
-This framework treats algebra not as a static set of rules, but as a dynamic language for expressing transformation, emergence, and failure. By embedding fractal logic into edge-based structures and trait abstractions, we aim to explore:
+A high-performance, zero-error crate for computing the prime factorization of factorials (`n!`). It uses **Legendre's Formula** to calculate results directly and efficiently, serving as a robust computational backend for number-theoretic analysis.
 
-- **Resonance as Algebra**: Phase, amplitude, and modular location become operands in a system where interference patterns encode meaning.
-- **Entropy as Deformation**: Algebraic operations are not always clean; they stretch, decay, and mutate—capturing the thermodynamic spirit of real systems.
-- **Structure as Emergence**: Recursive composition of edges and fields reveals higher-order symmetries, suggesting that complexity arises from simple, coherent rules.
-- **Failure as Insight**: Experimental modules are separated from canonical ones to preserve clarity and embrace the creative role of breakdowns in discovery.
+### 2. `tma_engine`
 
-This is not just a Rust crate—it is an evolving mathematical language for expressing the geometry of thought.
+A lightweight crate providing the algebraic tools for 2D affine transformations (`TMA`). This engine is the geometric heart of the project, used for generating fractals via Iterated Function Systems (IFS) and the Chaos Game algorithm.
 
-## 🧱 Core Structures
+### 3. `fractal_algebra` (The Main Application)
 
-### `FractalEdge`
-- Represents modular elements with amplitude, location, and phase.
-- Supports convolution, phase alignment, and entropy modulation.
+This is the primary research and application crate where the computational and geometric engines are brought together. It focuses on discovering and analyzing the emergent structures from number-theoretic data.
 
-### `GraphEdge`
-- Encodes spatial edges with origin, direction, length, and depth.
-- Used for recursive fractal generation and geometric scaffolding.
+The key innovation in this crate is the **`FractalGraph`**:
 
-### `FractalField`
-- A vector space over `Complex<f32>`, composed of `GraphEdge`s.
-- Supports addition, scalar multiplication, negation, and identity.
+- A custom data structure designed as a hybrid of a graph, a trie, and a spatial index.
+- It moves beyond simple visualization to create a rich, explorable network of relationships between numbers based on their prime factorizations.
+- Nodes in the graph represent `n!`, and relationships (edges) are formed dynamically based on mathematical similarity and shared number-theoretic traits.
+- Traversal of the graph mimics fractal expansion: recursive, self-similar, and semantically rich.
 
-## 🧠 Traits
+## Vision
 
-### `FractalAlgebra`
-Defines basic algebraic operations on `FractalEdge`:
-- `add`, `scale`, `multiply`, `zero`
+The overarching goal of this workspace is to develop tools and theories based on a "fractal" understanding of mathematical and physical systems. We explore the idea that complexity arises from simple, iterative rules, and that the relationships between objects are as important as the objects themselves.
 
-### `FractalRing`
-Implements ring-like behavior on `FractalField`:
-- `add`, `scale`, `multiply`, `negate`, `one`, `zero`
-- `multiply_and_preserve_symmetry` for phase-aware fusion
+The project investigates concepts such as:
+- The geometric patterns hidden in the prime factorizations of integers.
+- The potential for a unified "fractal algebra" to describe phenomena across different scales.
+- The nature of time and observation in a universe with fractal structure.
 
-## 🧪 Testing
+## Getting Started
 
-Includes a suite of tests for:
-- Ring axioms (associativity, identity, inverse, distributivity)
-- Vector space laws over ℂ
-- Canonical fractal structures and symmetry preservation
-
-## 📦 Usage
-
+To explore this workspace, clone the repository and build it using Cargo:
 ```bash
-cargo test
+git clone [https://github.com/neil-crago/fractal_algebra.git](https://github.com/neil-crago/fractal_algebra.git)
+cd fractal_algebra
+cargo build --release
 ```
-
-## 🚀 Future Directions
-
-- `FractalSignature`: extract invariant features from fields
-- `EntropyPulse`: simulate thermodynamic deformation
-- `PhaseAligner`: normalize and fuse modular phase clusters
-- `GraphField`: recursive spatial fractal generation
-- Category-theoretic morphisms between algebraic domains
-
-## 🧑‍💻 Author
-
-Neil Crago — experimental mathematician, Rust architect, and philosophical explorer of mathematical beauty.
-
-## 📄 License
-
-MIT
-
----
-
