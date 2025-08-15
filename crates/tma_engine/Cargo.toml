@@ -6,7 +6,7 @@ authors = ["Neil Crago"]
 description = "A library for producing TMA (Tiling, Morphing, and Animation) effects"
 license = "MIT OR Apache-2.0"
 repository = "https://github.com/Neil-Crago/fractal_algebra/crates/tma_engine"
-documentation = "https://docs.rs/fractal_algebra/crates/tma_engine"
+documentation = "https://docs.rs/tma_engine"
 keywords = ["TMA", "tiling", "morphing", "animation"]
 
 [dependencies]
