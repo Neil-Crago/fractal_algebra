@@ -40,7 +40,7 @@ The project investigates concepts such as:
 
 To explore this workspace, clone the repository and build it using Cargo:
 ```bash
-git clone [https://github.com/neil-crago/fractal_algebra.git](https://github.com/neil-crago/fractal_algebra.git)
+git clone https://github.com/neil-crago/fractal_algebra.git
 cd fractal_algebra
 cargo build --release
 ```
