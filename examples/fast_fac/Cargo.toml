@@ -1,0 +1,9 @@
+[package]
+name = "fast_fac"
+version = "0.1.0"
+edition = "2024"
+authors = ["Neil Crago"]
+
+[dependencies]
+fractal_algebra = { path = "../../crates/fractal_algebra" }
+factorial_engine = { path = "../../crates/factorial_engine" }

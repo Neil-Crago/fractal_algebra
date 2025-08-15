@@ -1,4 +1,3 @@
-
 #[derive(Clone, Debug, PartialEq)]
 pub struct FractalSignature {
     pub total_amplitude: f32,

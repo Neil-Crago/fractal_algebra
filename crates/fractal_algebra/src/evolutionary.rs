@@ -1,6 +1,6 @@
 use crate::field::FractalField;
-use crate::traits::Generator;
 use crate::mutation::MutationSuite;
+use crate::traits::Generator;
 
 /*
 pub struct EvolutionaryGenerator<S: MutationStrategy> {

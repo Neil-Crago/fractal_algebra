@@ -18,7 +18,7 @@ fn main() {
     assert!(test_add_associativity());
     assert!(test_add_commutativity());
     assert!(test_add_identity());
-    
+
     // assert!(test_add_inverse());
     let f = FractalField::one();
     let sum = f.clone() + (-f.clone());

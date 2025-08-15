@@ -1,8 +1,7 @@
 //! defines the Vec3 struct
 
-use std::ops::{Add, Mul, Neg, Rem, Sub};
 use rand::Rng;
-
+use std::ops::{Add, Mul, Neg, Rem, Sub};
 
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub struct Vec3 {
@@ -52,9 +51,12 @@ impl Vec3 {
         self.dot(self).sqrt()
     }
 
-    
     pub fn zero() -> Self {
-        Vec3 { x: 0.0, y: 0.0, z: 0.0 }
+        Vec3 {
+            x: 0.0,
+            y: 0.0,
+            z: 0.0,
+        }
     }
 
     pub fn normalize(&self) -> Self {
@@ -70,8 +72,6 @@ impl Vec3 {
         }
     }
 
-
-
     pub fn random() -> Self {
         let mut rng = rand::rng();
         Vec3 {
@@ -79,19 +79,30 @@ impl Vec3 {
             y: rng.random_range(-1.0..1.0),
             z: rng.random_range(-1.0..1.0),
         }
-}
-
-    pub fn unit_x() -> Self {
-        Vec3 { x: 1.0, y: 0.0, z: 0.0 }
     }
 
+    pub fn unit_x() -> Self {
+        Vec3 {
+            x: 1.0,
+            y: 0.0,
+            z: 0.0,
+        }
+    }
 
     pub fn unit_y() -> Self {
-        Vec3 { x: 0.0, y: 1.0, z: 0.0 }
+        Vec3 {
+            x: 0.0,
+            y: 1.0,
+            z: 0.0,
+        }
     }
 
     pub fn unit_z() -> Self {
-        Vec3 { x: 0.0, y: 0.0, z: 1.0 }
+        Vec3 {
+            x: 0.0,
+            y: 0.0,
+            z: 1.0,
+        }
     }
 }
 

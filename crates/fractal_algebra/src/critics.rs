@@ -8,7 +8,9 @@ pub struct CriticSuite {
 impl CriticSuite {
     /// Creates a new empty suite
     pub fn new() -> Self {
-        CriticSuite { critics: Vec::new() }
+        CriticSuite {
+            critics: Vec::new(),
+        }
     }
 
     /// Adds a critic with a given weight
@@ -18,14 +20,19 @@ impl CriticSuite {
 
     /// Scores a field using all critics
     pub fn score(&self, field: &FractalField) -> f32 {
-        self.critics.iter()
+        self.critics
+            .iter()
             .map(|(critic, weight)| critic.score(field) * weight)
             .sum()
     }
 
     /// Classifies using the highest-weighted critic
     pub fn classify(&self, field: &FractalField) -> String {
-        if let Some((critic, _)) = self.critics.iter().max_by(|a, b| a.1.partial_cmp(&b.1).unwrap()) {
+        if let Some((critic, _)) = self
+            .critics
+            .iter()
+            .max_by(|a, b| a.1.partial_cmp(&b.1).unwrap())
+        {
             critic.classify(&field.signature())
         } else {
             "unclassified".to_string()
@@ -33,18 +40,15 @@ impl CriticSuite {
     }
 }
 
-
 impl CriticSuite {
     pub fn select_best<'a>(&self, fields: &'a [FractalField]) -> Option<&'a FractalField> {
-        fields.iter()
-            .max_by(|a, b| {
-                let sa = self.score(a);
-                let sb = self.score(b);
-                sa.partial_cmp(&sb).unwrap_or(std::cmp::Ordering::Equal)
-            })
+        fields.iter().max_by(|a, b| {
+            let sa = self.score(a);
+            let sb = self.score(b);
+            sa.partial_cmp(&sb).unwrap_or(std::cmp::Ordering::Equal)
+        })
     }
 }
-
 
 /* Example usage
 

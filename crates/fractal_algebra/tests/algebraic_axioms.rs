@@ -1,6 +1,5 @@
 use fractal_algebra::field::FractalField;
 
-
 #[test]
 fn test_commutativity_addition() {
     let a = FractalField::random();

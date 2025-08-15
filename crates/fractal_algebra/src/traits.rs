@@ -1,13 +1,12 @@
 //! defines the FractalAlgebra trait
 
+use crate::Vec3;
+use crate::field::FractalField;
 use crate::fractaledge::FractalEdge;
 use crate::graphedge::GraphEdge;
 use crate::signature::FractalSignature;
-use crate::field::FractalField;
 use num_complex::Complex;
 use num_complex::ComplexFloat;
-use crate::Vec3;
-
 
 pub trait FractalAlgebra {
     fn add(&self, other: &Self) -> Self;
@@ -124,62 +123,75 @@ trait _AlgebraicLaws {
 impl FractalRing for FractalField {
     fn add(&self, other: &Self) -> Self {
         FractalField {
-            edges: self.edges.iter().zip(&other.edges).map(|(self_edge, other_edge)| {
-                GraphEdge {
+            edges: self
+                .edges
+                .iter()
+                .zip(&other.edges)
+                .map(|(self_edge, other_edge)| GraphEdge {
                     origin: self_edge.origin + other_edge.origin,
                     direction: self_edge.direction + other_edge.direction,
                     length: self_edge.length + other_edge.length,
                     depth: self_edge.depth + other_edge.depth,
                     data: self_edge.data + other_edge.data,
-                }
-            }).collect(),
+                })
+                .collect(),
         }
     }
 
     fn scale(&self, factor: Complex<f32>) -> Self {
         FractalField {
-        edges: self.edges.iter().map(|edge| {
-            GraphEdge {
-                origin: edge.origin,
-                direction: edge.direction,
-                length: edge.length * factor.re, // scale length by real part
-                depth: edge.depth,
-                data: edge.data * factor, // scale data by complex factor
-            }
-        }).collect(),
+            edges: self
+                .edges
+                .iter()
+                .map(|edge| {
+                    GraphEdge {
+                        origin: edge.origin,
+                        direction: edge.direction,
+                        length: edge.length * factor.re, // scale length by real part
+                        depth: edge.depth,
+                        data: edge.data * factor, // scale data by complex factor
+                    }
+                })
+                .collect(),
         }
     }
 
     fn multiply(&self, other: &Self) -> Self {
         FractalField {
-            edges: self.edges.iter().zip(&other.edges).map(|(self_edge, other_edge)| {
-                GraphEdge {
+            edges: self
+                .edges
+                .iter()
+                .zip(&other.edges)
+                .map(|(self_edge, other_edge)| GraphEdge {
                     origin: self_edge.origin + other_edge.origin,
                     direction: self_edge.direction + other_edge.direction,
                     length: self_edge.length * other_edge.length,
                     depth: self_edge.depth + other_edge.depth,
                     data: self_edge.data * other_edge.data,
-                }
-            }).collect(),
+                })
+                .collect(),
         }
     }
-    
-   
+
     fn multiply_and_preserve_symmetry(&self, other: &Self) -> Self {
         let ori = (self.edges[0].origin + other.edges[0].origin) % std::f32::consts::TAU;
         let dir = (self.edges[0].direction + other.edges[0].direction) % std::f32::consts::TAU;
         let scl = (self.edges[0].length * other.edges[0].length).abs(); // symmetry-preserving
         let dep = (self.edges[0].depth + other.edges[0].depth) as f32 % std::f32::consts::TAU;
         let dat: f32 = (self.edges[0].data * other.edges[0].data).abs(); // symmetry-preserving
-        FractalField { edges: self.edges.iter().zip(&other.edges).map(|(_self_edge, _other_edge)| {
-            GraphEdge {
-                origin: ori,
-                direction: dir,
-                length: scl,
-                depth: dep as u32,
-                data: dat.into(),
-            }
-            }).collect(),
+        FractalField {
+            edges: self
+                .edges
+                .iter()
+                .zip(&other.edges)
+                .map(|(_self_edge, _other_edge)| GraphEdge {
+                    origin: ori,
+                    direction: dir,
+                    length: scl,
+                    depth: dep as u32,
+                    data: dat.into(),
+                })
+                .collect(),
         }
     }
 
@@ -188,37 +200,45 @@ impl FractalRing for FractalField {
     }
 
     fn one() -> Self {
-     FractalField { edges: vec![GraphEdge {
-                origin: Vec3 { x: 0.0, y: 0.0, z: 0.0 },
-                direction: Vec3 { x: 1.0, y: 0.0, z: 0.0 },
+        FractalField {
+            edges: vec![GraphEdge {
+                origin: Vec3 {
+                    x: 0.0,
+                    y: 0.0,
+                    z: 0.0,
+                },
+                direction: Vec3 {
+                    x: 1.0,
+                    y: 0.0,
+                    z: 0.0,
+                },
                 length: 1.0,
                 depth: 0,
                 data: Complex::new(1.0, 0.0),
-            }] }
+            }],
         }
+    }
 
     fn negate(&self) -> Self {
         FractalField {
-            edges: self.edges.iter().map(|edge| {
-                GraphEdge {
+            edges: self
+                .edges
+                .iter()
+                .map(|edge| GraphEdge {
                     origin: edge.origin,
                     direction: edge.direction,
                     length: edge.length,
                     depth: edge.depth,
                     data: -edge.data,
-                }
-            }).collect(),
+                })
+                .collect(),
         }
     }
 }
 
-
-
 pub trait HasSignature {
     fn signature(&self) -> FractalSignature;
 }
-
-
 
 impl HasSignature for FractalField {
     fn signature(&self) -> FractalSignature {
@@ -257,7 +277,6 @@ impl HasSignature for FractalField {
     }
 }
 
-
 pub trait Critic {
     /// Scores a field based on its signature
     fn score(&self, field: &FractalField) -> f32;
@@ -294,7 +313,6 @@ impl Critic for EntropyCritic {
     }
 }
 
-
 pub trait Generator {
     /// Produces initial candidates
     fn generate(&self) -> Vec<FractalField>;
@@ -303,10 +321,7 @@ pub trait Generator {
     fn mutate(&self, field: &FractalField) -> Vec<FractalField>;
 }
 
-
 pub trait MutationStrategy {
     /// Mutates a field to produce a new variant
     fn mutate(&self, field: &FractalField) -> FractalField;
 }
-
-

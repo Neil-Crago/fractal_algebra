@@ -1,7 +1,7 @@
-use crate::field::FractalField;
-use crate::traits::Generator;
 use crate::critics::CriticSuite;
+use crate::field::FractalField;
 use crate::looprep::LoopReport;
+use crate::traits::Generator;
 
 pub struct GeneratorCriticLoop<G: Generator> {
     pub generator: G,
@@ -20,7 +20,10 @@ impl<G: Generator> GeneratorCriticLoop<G> {
             };
 
             if let Some(candidate) = self.critic_suite.select_best(&candidates) {
-                if best.is_none() || self.critic_suite.score(candidate) > self.critic_suite.score(best.as_ref().unwrap()) {
+                if best.is_none()
+                    || self.critic_suite.score(candidate)
+                        > self.critic_suite.score(best.as_ref().unwrap())
+                {
                     best = Some(candidate.clone());
                 }
             }
@@ -57,7 +60,7 @@ impl<G: Generator> GeneratorCriticLoop<G> {
     }
 }
 
-/* Example usage 
+/* Example usage
 let generator = RandomFieldGenerator { count: 10 };
 
 let mut suite = CriticSuite::new();

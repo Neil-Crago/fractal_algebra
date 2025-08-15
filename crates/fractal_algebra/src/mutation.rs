@@ -7,7 +7,9 @@ pub struct MutationSuite {
 
 impl MutationSuite {
     pub fn new() -> Self {
-        MutationSuite { strategies: Vec::new() }
+        MutationSuite {
+            strategies: Vec::new(),
+        }
     }
 
     pub fn add_strategy<S: MutationStrategy + 'static>(&mut self, strategy: S, weight: f32) {

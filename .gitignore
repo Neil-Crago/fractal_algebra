@@ -1,2 +1,6 @@
 /target
-/examples/canonical_test/target
+/crates/fractal_algebra/target
+/crates/tma_engine/target
+/crates/factorial_engine/target
+/examples/sierpinski/target
+/examples/fast_fac/target
