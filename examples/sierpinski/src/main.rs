@@ -1,7 +1,7 @@
 use tma_engine::geometry::{IFS, TMA};
 use tma_engine::render::Renderer;
 
-fn get_sierpinski_ifs() -> Vec<TMA> {
+fn _get_sierpinski_ifs() -> Vec<TMA> {
     let p = 1.0 / 3.0; // Equal probability for each transformation
 
     // T1: Scale by 0.5, translate to bottom-left
