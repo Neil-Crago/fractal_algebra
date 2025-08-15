@@ -481,3 +481,189 @@ impl IFS {
     }
 }
 
+/// A trait defining algebraic operations for fractal fields.
+impl FractalAlgebra for FractalField {
+    fn add(&self, other: &Self) -> Self {
+        let mut result = Vec::new();
+ 
+
+        for edge in &self.edges {
+            if let Some(matching) = other
+                .edges
+                .iter()
+                .find(|e2| e2.origin == edge.origin && e2.direction == edge.direction)
+            {
+                result.push(GraphEdge {
+                    origin: edge.origin,
+                    direction: edge.direction,
+                    length: edge.length,
+                    depth: edge.depth,
+                    data: edge.data + matching.data,
+                });
+            } else {
+                result.push(edge.clone());
+            }
+        }
+
+        FractalField { edges: result }
+    }
+
+    fn sub(&self, other: &Self) -> Self {
+       let mut result = Vec::new();
+
+        for edge in &self.edges {
+            if let Some(matching) = other
+                .edges
+                .iter()
+                .find(|e2| e2.origin == edge.origin && e2.direction == edge.direction)
+            {
+                result.push(GraphEdge {
+                    origin: edge.origin,
+                    direction: edge.direction,
+                    length: edge.length - matching.length,
+                    depth: edge.depth,
+                    data: edge.data - matching.data,
+                });
+            }
+        }
+
+        FractalField { edges: result }
+    }
+    
+    /// `mul` implements the universal CSG `Intersection` operation.
+    fn mul(&self, other: &Self) -> Self {
+        let mut result = Vec::new();
+
+        for edge in &self.edges {
+            if let Some(matching) = other
+                .edges
+                .iter()
+                .find(|e2| e2.origin == edge.origin && e2.direction == edge.direction)
+            {
+                result.push(GraphEdge {
+                    origin: edge.origin,
+                    direction: edge.direction,
+                    length: edge.length * matching.length,
+                    depth: edge.depth,
+                    data: edge.data * matching.data,
+                });
+            }
+        }
+
+        FractalField { edges: result }
+    }
+    
+    fn scale(&self, factor: Complex<f32>) -> Self {
+        let edges = self
+            .edges
+            .iter()
+            .map(|e| GraphEdge {
+                data: e.data * factor,
+                ..*e
+            })
+            .collect();
+
+        FractalField { edges }
+    }
+
+    fn multiply(&self, other: &Self) -> Self {
+        let mut result = Vec::new();
+
+        for edge in &self.edges {
+            if let Some(matching) = other
+                .edges
+                .iter()
+                .find(|e2| e2.origin == edge.origin && e2.direction == edge.direction)
+            {
+                result.push(GraphEdge {
+                    origin: edge.origin,
+                    direction: edge.direction,
+                    length: edge.length * matching.length,
+                    depth: edge.depth,
+                    data: edge.data * matching.data,
+                });
+            }
+        }
+
+        FractalField { edges: result }
+    }
+
+    fn zero() -> Self {
+        FractalField { edges: Vec::new() }
+    }
+}
+
+
+// This allows operations like `mandelbrot + ifs`.
+pub fn add_fractals(a: &Box<dyn Fractal>, b: &Box<dyn Fractal>) -> FractalCollection {
+    FractalCollection {
+        members: vec![
+            CollectionMember { fractal: a.clone(), operation: Operation::Union },
+            CollectionMember { fractal: b.clone(), operation: Operation::Union },
+        ],
+    }
+}
+
+pub fn sub_fractals(a: &Box<dyn Fractal>, b: &Box<dyn Fractal>) -> FractalCollection {
+    FractalCollection {
+        members: vec![
+            CollectionMember { fractal: a.clone(), operation: Operation::Union },
+            CollectionMember { fractal: b.clone(), operation: Operation::Difference },
+        ],
+    }
+}
+
+pub fn mul_fractals(a: &Box<dyn Fractal>, b: &Box<dyn Fractal>) -> FractalCollection {
+    FractalCollection {
+        members: vec![
+            CollectionMember { fractal: a.clone(), operation: Operation::Union },
+            CollectionMember { fractal: b.clone(), operation: Operation::Intersection },
+        ],
+    }
+}
+
+// Implementation to allow chaining operations on a `FractalCollection`.
+// This enables expressions like `(A + B) * C`.
+impl FractalAlgebra for FractalCollection {
+    fn add(&self, other: &Self) -> Self {
+        let mut members = self.members.clone();
+        members.extend(other.members.clone());
+        FractalCollection { members }
+    }
+
+    fn sub(&self, other: &Self) -> Self {
+        let mut members = self.members.clone();
+        for member in &other.members {
+            members.push(CollectionMember {
+                fractal: member.fractal.clone(),
+                operation: Operation::Difference,
+            });
+        }
+        FractalCollection { members }
+    }
+
+    fn mul(&self, other: &Self) -> Self {
+        let mut members = self.members.clone();
+        for member in &other.members {
+            members.push(CollectionMember {
+                fractal: member.fractal.clone(),
+                operation: Operation::Intersection,
+            });
+        }
+        FractalCollection { members }
+    }
+
+    fn scale(&self, _factor: Complex<f32>) -> Self {
+        // Scaling not implemented for FractalCollection
+        self.clone()
+    }
+
+    fn multiply(&self, other: &Self) -> Self {
+        self.mul(other)
+    }
+
+    fn zero() -> Self {
+        FractalCollection { members: Vec::new() }
+    }
+}
+

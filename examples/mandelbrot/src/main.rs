@@ -1,3 +1,4 @@
+use fractal_algebra::traits::mul_fractals;
 use fractal_algebra::traits::Mandelbrot;
 use fractal_algebra::traits::IFS;
 
@@ -13,7 +14,11 @@ fn main() {
 
     println!("--- Chained Universal Multiplication (Intersection) ---");
     // (m1 - m2) * ifs1 => ((m1 + (-m2)) * ifs1)
-    let complex_expression = m1.clone().sub(&m2.clone()).mul(&m1.clone());
+    //let complex_expression = m1.clone().sub(&m2.clone()).mul(&ifs1.clone());
+    let complex_expression1 = m1.clone().sub(&m2.clone());
+    let boxed_fractal1: Box<dyn fractal_algebra::traits::Fractal> = Box::new(complex_expression1);
+    let boxed_fractal2: Box<dyn fractal_algebra::traits::Fractal> = Box::new(ifs1.clone());
+    let complex_expression = mul_fractals(&boxed_fractal1, &boxed_fractal2);
     println!("{:#?}\n", complex_expression);
 
     println!("--- Hybrid Multiplication System ---");

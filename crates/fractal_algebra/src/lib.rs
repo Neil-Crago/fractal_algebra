@@ -1,4 +1,3 @@
-pub mod algebra;
 pub mod constants;
 pub mod criticloop;
 pub mod critics;
