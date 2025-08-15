@@ -1,9 +1,11 @@
 [workspace]
 resolver = "3"
-members = [ "crates/factorial_engine",
+members = [ 
+    "crates/factorial_engine",
     "crates/fractal_algebra",
     "crates/tma_engine",
-    "crates/factorial_engine",
     "examples/sierpinski",   
-    "examples/fast_fac", "examples/mandelbrot"]
+    "examples/fast_fac",
+    "examples/mandelbrot"
+]
 
