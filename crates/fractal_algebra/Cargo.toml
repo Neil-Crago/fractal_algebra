@@ -13,3 +13,6 @@ keywords = ["fractal", "algebra", "mathematics", "complex-numbers"]
 [dependencies]
 num-complex = "0.4.6"
 rand = "0.9.2"
+
+[dependencies.factorial_engine]
+path = "../factorial_engine"

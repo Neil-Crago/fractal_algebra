@@ -17,6 +17,7 @@ pub mod traits;
 pub mod vec3;
 pub mod graph;
 
+
 pub use constants::MODULUS;
 pub use criticloop::GeneratorCriticLoop;
 pub use critics::CriticSuite;
