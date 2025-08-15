@@ -1,6 +1,3 @@
-### `tma_engine/README.md`
-
-```markdown
 # TMA Engine: Affine Transformation Toolkit
 
 A lightweight and ergonomic Rust crate for defining, composing, and applying 2D affine transformations.
