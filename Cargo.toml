@@ -5,5 +5,5 @@ members = [ "crates/factorial_engine",
     "crates/tma_engine",
     "crates/factorial_engine",
     "examples/sierpinski",   
-    "examples/fast_fac"]
+    "examples/fast_fac", "examples/mandelbrot"]
 

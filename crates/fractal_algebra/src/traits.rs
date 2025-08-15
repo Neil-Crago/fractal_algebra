@@ -13,6 +13,9 @@ pub trait FractalAlgebra {
     fn scale(&self, factor: Complex<f32>) -> Self;
     fn multiply(&self, other: &Self) -> Self;
     fn zero() -> Self;
+    fn sub(&self, other: &Self) -> Self;
+    fn mul(&self, rhs: &Self) -> Self;
+
 }
 
 pub trait FractalRing: Sized {
@@ -57,6 +60,26 @@ impl FractalAlgebra for FractalEdge {
             phase: 0.0,
         }
     }
+
+        /// `sub` implements the `A + (-B)` model.
+    /// It creates a collection with a `Union` (A) and a `Difference` (-B).
+    fn sub(&self, other: &Self) -> Self {
+        FractalEdge {
+            amplitude: self.amplitude - other.amplitude,
+            location: self.location,
+            phase: self.phase - other.phase,
+        }
+    }
+    
+    /// `mul` implements the universal CSG `Intersection` operation.
+    fn mul(&self, other: &Self) -> Self {
+     FractalEdge {
+            amplitude: self.amplitude * other.amplitude,
+            location: self.location + other.location,
+            phase: self.phase + other.phase,
+        }
+    }
+
 }
 
 impl FractalRing for FractalEdge {
@@ -325,3 +348,136 @@ pub trait MutationStrategy {
     /// Mutates a field to produce a new variant
     fn mutate(&self, field: &FractalField) -> FractalField;
 }
+
+
+use std::fmt::Debug;
+
+//-///////////////////////////////////////////////////////////////////////////
+// 1. CORE COMPONENTS & TRAITS
+//-///////////////////////////////////////////////////////////////////////////
+
+/// A trait to allow cloning of Box<dyn Fractal>.
+/// This is a standard pattern for cloning trait objects in Rust.
+pub trait FractalClone {
+    fn clone_box(&self) -> Box<dyn Fractal>;
+}
+
+impl<T> FractalClone for T
+where
+    T: 'static + Fractal + Clone,
+{
+    fn clone_box(&self) -> Box<dyn Fractal> {
+        Box::new(self.clone())
+    }
+}
+
+impl Clone for Box<dyn Fractal> {
+    fn clone(&self) -> Box<dyn Fractal> {
+        self.clone_box()
+    }
+}
+
+/// The base trait for all fractal types.
+/// It requires Clone, Debug, and a static lifetime.
+pub trait Fractal: FractalClone + Debug + 'static {}
+
+/// The operation to be applied to a member within a collection.
+/// This is the core of the CSG (Constructive Solid Geometry) approach.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum Operation {
+    Union,       // Additive operation (+)
+    Difference,  // Subtractive operation (-)
+    Intersection, // Multiplicative operation (*)
+}
+
+/// A member of the FractalCollection, containing the fractal
+/// itself and the operation that connects it to the rest of the collection.
+#[derive(Debug, Clone)]
+pub struct CollectionMember {
+    pub fractal: Box<dyn Fractal>,
+    pub operation: Operation,
+}
+
+/// Represents a collection of fractals and their relationships.
+/// This is the primary output of most algebraic operations.
+#[derive(Debug, Clone, Default)]
+pub struct FractalCollection {
+    pub members: Vec<CollectionMember>,
+}
+
+//-///////////////////////////////////////////////////////////////////////////
+// 2. CONCRETE FRACTAL TYPE DEFINITIONS (EXAMPLES)
+//-///////////////////////////////////////////////////////////////////////////
+
+#[derive(Debug, Clone)]
+pub struct Mandelbrot {
+    pub center_re: f64,
+    pub center_im: f64,
+    pub zoom: f64,
+}
+impl Fractal for Mandelbrot {}
+
+#[derive(Debug, Clone)]
+pub struct IFS {
+    // An Iterated Function System would be a list of transformations (matrices).
+    // Using a simple u32 for demonstration.
+    pub transform_count: u32,
+}
+impl Fractal for IFS {}
+
+//-///////////////////////////////////////////////////////////////////////////
+// 3. THE FRACTAL ALGEBRA TRAIT
+//-///////////////////////////////////////////////////////////////////////////
+
+
+
+//-///////////////////////////////////////////////////////////////////////////
+// 5. HYBRID MULTIPLICATION: SPECIALIZED METHODS
+//-///////////////////////////////////////////////////////////////////////////
+
+impl Mandelbrot {
+    /// Specialized Multiplication: Geometric Transformation.
+    /// This is not part of the `FractalAlgebra` trait to avoid ambiguity.
+    pub fn transform_by(&self, other: &Mandelbrot) -> Mandelbrot {
+        println!("LOG: Performing specialized geometric transformation multiplication...");
+        // Placeholder logic: combines parameters in a specific way.
+        Mandelbrot {
+            center_re: self.center_re + other.center_re,
+            center_im: self.center_im + other.center_im,
+            zoom: self.zoom * other.zoom,
+        }
+    }
+
+    pub fn sub(&self, other: &Mandelbrot) -> Mandelbrot {
+        println!("LOG: Performing specialized geometric transformation subtraction...");
+        // Placeholder logic: combines parameters in a specific way.
+        Mandelbrot {
+            center_re: self.center_re - other.center_re,
+            center_im: self.center_im - other.center_im,
+            zoom: self.zoom - other.zoom,
+        }
+    }
+
+    pub fn mul(&self, other: &Mandelbrot) -> Mandelbrot {
+        println!("LOG: Performing specialized geometric transformation multiplication...");
+        // Placeholder logic: combines parameters in a specific way.
+        Mandelbrot {
+            center_re: self.center_re * other.center_re,
+            center_im: self.center_im * other.center_im,
+            zoom: self.zoom * other.zoom,
+        }
+    }
+}
+
+impl IFS {
+    /// Specialized Multiplication: Function Composition.
+    /// This is not part of the `FractalAlgebra` trait to avoid ambiguity.
+    pub fn compose_with(&self, other: &IFS) -> IFS {
+        println!("LOG: Performing specialized function composition multiplication...");
+        // Placeholder logic: The new IFS would have n * m transforms.
+        IFS {
+            transform_count: self.transform_count * other.transform_count,
+        }
+    }
+}
+

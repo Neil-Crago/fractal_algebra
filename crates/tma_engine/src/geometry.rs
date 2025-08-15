@@ -167,7 +167,7 @@ impl IFS {
     }
 
     /// Chooses a transformation based on their weighted probabilities.
-    fn choose_transformation(&self) -> &TMA {
+    pub fn choose_transformation(&self) -> &TMA {
         let mut rng = rand::thread_rng();
         let r: f64 = rng.gen_range(0.0..1.0); // A random float between 0.0 and 1.0
 

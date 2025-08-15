@@ -91,7 +91,8 @@ impl FractalGraph {
 
     /// Helper function to compute similarity between two factorizations.
     /// This is a concrete implementation of "shared traits".
-    fn calculate_cosine_similarity(f1: &FactorizationMap, f2: &FactorizationMap) -> f64 {
+    /// remove underscores
+    fn calculate_cosine_similarity(_f1: &FactorizationMap, _f2: &FactorizationMap) -> f64 {
         // This function would convert the two factorization maps into vectors
         // in a common prime basis, and then compute their cosine similarity.
         // (A dot product divided by the product of their magnitudes).
