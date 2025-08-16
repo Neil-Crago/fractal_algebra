@@ -1,0 +1,8 @@
+[package]
+name = "a_star"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+fractal_algebra = {path = "../../crates/fractal_algebra"}
+factorial_engine = {path = "../../crates/factorial_engine"}

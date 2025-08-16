@@ -16,6 +16,7 @@ pub mod tests;
 pub mod traits;
 pub mod vec3;
 pub mod graph;
+pub mod time;
 
 
 pub use constants::MODULUS;
@@ -36,8 +37,30 @@ pub use tests::{
     test_add_associativity, test_add_commutativity, test_add_identity, test_add_inverse,
     test_for_distributivity, test_mul_identity,
 };
-pub use traits::{FractalAlgebra, FractalRing};
+pub use traits::{
+    Critic,
+    CollectionMember,
+    EntropyCritic,
+    SymmetryCritic,
+    FractalAlgebra, 
+    Fractal, 
+    FractalClone, 
+    FractalCollection, 
+    FractalRing, 
+    Generator,
+    HasSignature,
+    IFS, 
+    Mandelbrot,
+    MutationStrategy, 
+    mul_fractals,
+    add_fractals,
+    sub_fractals,
+    Operation};
+
 pub use vec3::Vec3;
 pub use graph::{FractalGraph, FactorialNode};
+pub use time::{FractalSpacetime, SpacetimeCoordinate, Evolvable};
+
+
 #[macro_use]
 mod macros;

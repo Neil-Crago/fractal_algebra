@@ -7,6 +7,8 @@ use crate::graphedge::GraphEdge;
 use crate::signature::FractalSignature;
 use num_complex::Complex;
 use num_complex::ComplexFloat;
+use std::fmt::Debug;
+
 
 pub trait FractalAlgebra {
     fn add(&self, other: &Self) -> Self;
@@ -350,12 +352,6 @@ pub trait MutationStrategy {
 }
 
 
-use std::fmt::Debug;
-
-//-///////////////////////////////////////////////////////////////////////////
-// 1. CORE COMPONENTS & TRAITS
-//-///////////////////////////////////////////////////////////////////////////
-
 /// A trait to allow cloning of Box<dyn Fractal>.
 /// This is a standard pattern for cloning trait objects in Rust.
 pub trait FractalClone {
@@ -425,15 +421,6 @@ pub struct IFS {
 }
 impl Fractal for IFS {}
 
-//-///////////////////////////////////////////////////////////////////////////
-// 3. THE FRACTAL ALGEBRA TRAIT
-//-///////////////////////////////////////////////////////////////////////////
-
-
-
-//-///////////////////////////////////////////////////////////////////////////
-// 5. HYBRID MULTIPLICATION: SPECIALIZED METHODS
-//-///////////////////////////////////////////////////////////////////////////
 
 impl Mandelbrot {
     /// Specialized Multiplication: Geometric Transformation.
