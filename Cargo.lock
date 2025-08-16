@@ -6,8 +6,8 @@ version = 4
 name = "a_star"
 version = "0.1.0"
 dependencies = [
- "factorial_engine 0.1.1",
- "fractal_algebra 0.1.6",
+ "factorial_engine 0.1.1 (registry+https://github.com/rust-lang/crates.io-index)",
+ "fractal_algebra 0.1.5",
 ]
 
 [[package]]
