@@ -1,7 +1,7 @@
 use std::collections::HashMap;
 use factorial_engine::FactorialEngine;
 
-// A more descriptive name for your vecmap structure.
+// A more descriptive name for my vecmap structure.
 // Represents the prime factorization as a list of (prime, exponent) tuples.
 pub type FactorizationMap = Vec<(u64, u64)>;
 

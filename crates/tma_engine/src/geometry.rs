@@ -124,11 +124,6 @@ impl Mul<Point> for TMA {
     }
 }
 
-// Add this to our existing code.
-// We'll need a random number generator. Add `rand` to your Cargo.toml.
-// `rand = "0.8"`
-
-/// IFS: Iterated Function System.
 /// A collection of TMA transformations that defines a fractal.
 pub struct IFS {
     transformations: Vec<TMA>,

@@ -5,7 +5,7 @@ edition = "2024"
 authors = ["Neil Crago"]
 description = "A library for producing factorials"
 license = "MIT OR Apache-2.0"
-repository = "https://github.com/Neil-Crago/fractal_algebra/crates/factorial_engine"
+repository = "https://github.com/Neil-Crago/fractal_algebra"
 documentation = "https://docs.rs/factorial_engine"
 keywords = ["mathematics", "factorial"]
 

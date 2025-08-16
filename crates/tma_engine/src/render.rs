@@ -1,4 +1,3 @@
-// Add this to your workspace.
 use crate::geometry::Point;
 use image::{ImageBuffer, Rgb};
 
