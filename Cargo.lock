@@ -40,9 +40,9 @@ checksum = "b0674a1ddeecb70197781e945de4b3b8ffb61fa939a5597bcf48503737663100"
 
 [[package]]
 name = "arbitrary"
-version = "1.4.1"
+version = "1.4.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "dde20b3d026af13f561bdd0f15edf01fc734f0dafcedbaf42bba506a9517f223"
+checksum = "c3d036a3c4ab069c7b410a2ce876bd74808d2d0888a82667669f8e783a898bf1"
 
 [[package]]
 name = "arg_enum_proc_macro"
@@ -83,9 +83,9 @@ dependencies = [
 
 [[package]]
 name = "avif-serialize"
-version = "0.8.5"
+version = "0.8.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "2ea8ef51aced2b9191c08197f55450d830876d9933f8f48a429b354f1d496b42"
+checksum = "47c8fbc0f831f4519fe8b810b6a7a91410ec83031b8233f730a0480029f6a23f"
 dependencies = [
  "arrayvec",
 ]
@@ -140,9 +140,9 @@ checksum = "8f1fe948ff07f4bd06c30984e69f5b4899c516a3ef74f34df92a2df2ab535495"
 
 [[package]]
 name = "cc"
-version = "1.2.32"
+version = "1.2.33"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "2352e5597e9c544d5e6d9c95190d5d27738ade584fa8db0a16e130e5c2b5296e"
+checksum = "3ee0f8803222ba5a7e2777dd72ca451868909b1ac410621b676adf07280e9b5f"
 dependencies = [
  "jobserver",
  "libc",
@@ -280,20 +280,20 @@ dependencies = [
 
 [[package]]
 name = "factorial_engine"
-version = "0.1.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f68ab95e2c3884e329c072b0138aebe180c030cf0dee7719fc277d7919ba017b"
+version = "0.1.1"
 
 [[package]]
 name = "factorial_engine"
 version = "0.1.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "e81b90aef7e2fb64e4ea9547357e85ee2e0c6601a6bdc906bd7ea9c106376a47"
 
 [[package]]
 name = "fast_fac"
 version = "0.1.0"
 dependencies = [
- "factorial_engine 0.1.1",
- "fractal_algebra",
+ "factorial_engine 0.1.1 (registry+https://github.com/rust-lang/crates.io-index)",
+ "fractal_algebra 0.1.5 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]
@@ -319,7 +319,18 @@ dependencies = [
 name = "fractal_algebra"
 version = "0.1.5"
 dependencies = [
- "factorial_engine 0.1.0",
+ "factorial_engine 0.1.1 (registry+https://github.com/rust-lang/crates.io-index)",
+ "num-complex",
+ "rand 0.9.2",
+]
+
+[[package]]
+name = "fractal_algebra"
+version = "0.1.5"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "0b7d78c58d1af8765f47dd17f68c6e412fe150f89117d89164fdea4880095cbb"
+dependencies = [
+ "factorial_engine 0.1.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "num-complex",
  "rand 0.9.2",
 ]
@@ -539,8 +550,8 @@ dependencies = [
 name = "mandelbrot"
 version = "0.1.0"
 dependencies = [
- "fractal_algebra",
- "tma_engine",
+ "fractal_algebra 0.1.5 (registry+https://github.com/rust-lang/crates.io-index)",
+ "tma_engine 0.1.2 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]
@@ -935,8 +946,8 @@ name = "sierpinski"
 version = "0.1.0"
 dependencies = [
  "chrono",
- "fractal_algebra",
- "tma_engine",
+ "fractal_algebra 0.1.5 (registry+https://github.com/rust-lang/crates.io-index)",
+ "tma_engine 0.1.2 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]
@@ -962,9 +973,9 @@ checksum = "67b1b7a3b5fe4f1376887184045fcf45c69e92af734b7aaddc05fb777b6fbd03"
 
 [[package]]
 name = "syn"
-version = "2.0.104"
+version = "2.0.106"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "17b6f705963418cdb9927482fa304bc562ece2fdd4f616084c50b7023b435a40"
+checksum = "ede7c438028d4436d71104916910f5bb611972c5cfd7f89b8300a8186e6fada6"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -1024,6 +1035,16 @@ dependencies = [
 [[package]]
 name = "tma_engine"
 version = "0.1.2"
+dependencies = [
+ "image",
+ "rand 0.8.5",
+]
+
+[[package]]
+name = "tma_engine"
+version = "0.1.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "849369729031bd69b44f8b1fd86952f5f85571fb39b8c288b6f261b5369bbd13"
 dependencies = [
  "image",
  "rand 0.8.5",

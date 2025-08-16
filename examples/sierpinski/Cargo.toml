@@ -5,6 +5,6 @@ edition = "2024"
 authors = ["Neil Crago"]
 
 [dependencies]
-fractal_algebra = { path = "../../crates/fractal_algebra" }
-tma_engine      = { path = "../../crates/tma_engine" }
+fractal_algebra = "0.1.5"
+tma_engine      = "0.1.2"
 chrono = "0.4.41"
