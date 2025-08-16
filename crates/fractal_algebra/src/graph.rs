@@ -43,8 +43,8 @@ impl PartialOrd for AStarState {
 /// A custom graph structure to store and analyze the relationships
 /// between factorial factorizations.
 pub struct FractalGraph {
-    nodes: HashMap<u64, FactorialNode>,
-    prime_to_n_index: HashMap<u64, Vec<u64>>,
+    pub nodes: HashMap<u64, FactorialNode>,
+    pub prime_to_n_index: HashMap<u64, Vec<u64>>,
 }
 
 impl FractalGraph {

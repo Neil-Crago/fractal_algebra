@@ -8,7 +8,7 @@ fn main() {
 
     // Populate the graph with nodes from n=1 to n=100
     for n in 1..=100 {
-        graph.add_node(n, &engine);
+        graph.add_node(n, &mut engine);
     }
     println!("Graph populated with {} nodes.", graph.nodes.len());
 
