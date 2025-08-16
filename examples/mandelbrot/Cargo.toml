@@ -4,5 +4,5 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
-tma_engine = { path = "../../crates/tma_engine" }
-fractal_algebra = { path = "../../crates/fractal_algebra" }
+tma_engine = "0.1.2"
+fractal_algebra = "0.1.5"
