@@ -7,7 +7,7 @@ name = "a_star"
 version = "0.1.0"
 dependencies = [
  "factorial_engine 0.1.1",
- "fractal_algebra 0.1.5",
+ "fractal_algebra 0.1.6",
 ]
 
 [[package]]
@@ -301,7 +301,7 @@ name = "fast_fac"
 version = "0.1.0"
 dependencies = [
  "factorial_engine 0.1.1 (registry+https://github.com/rust-lang/crates.io-index)",
- "fractal_algebra 0.1.5 (registry+https://github.com/rust-lang/crates.io-index)",
+ "fractal_algebra 0.1.5",
 ]
 
 [[package]]
@@ -326,6 +326,8 @@ dependencies = [
 [[package]]
 name = "fractal_algebra"
 version = "0.1.5"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "0b7d78c58d1af8765f47dd17f68c6e412fe150f89117d89164fdea4880095cbb"
 dependencies = [
  "factorial_engine 0.1.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "num-complex",
@@ -334,9 +336,7 @@ dependencies = [
 
 [[package]]
 name = "fractal_algebra"
-version = "0.1.5"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "0b7d78c58d1af8765f47dd17f68c6e412fe150f89117d89164fdea4880095cbb"
+version = "0.1.6"
 dependencies = [
  "factorial_engine 0.1.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "num-complex",
@@ -558,7 +558,7 @@ dependencies = [
 name = "mandelbrot"
 version = "0.1.0"
 dependencies = [
- "fractal_algebra 0.1.5 (registry+https://github.com/rust-lang/crates.io-index)",
+ "fractal_algebra 0.1.5",
  "tma_engine 0.1.2 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
@@ -954,7 +954,7 @@ name = "sierpinski"
 version = "0.1.0"
 dependencies = [
  "chrono",
- "fractal_algebra 0.1.5 (registry+https://github.com/rust-lang/crates.io-index)",
+ "fractal_algebra 0.1.5",
  "tma_engine 0.1.2 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 

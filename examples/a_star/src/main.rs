@@ -43,6 +43,6 @@ fn main() {
     }
 }
 
-// NOTE: You would need to add the full implementations for FactorialEngine, 
+// NOTE: I would need to add the full implementations for FactorialEngine, 
 // FractalGraph::new, add_node, etc. for this to be a complete, runnable example.
 // The mocked `find_similar_nodes` is used here for simplicity
