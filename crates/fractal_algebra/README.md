@@ -63,26 +63,6 @@ The project investigates concepts such as:
 - The nature of time and observation in a universe with fractal structure.
 
 
-## 📚 Documentation
-
-- Overview & Philosophy
-- Core Concepts
-- Trait Architecture
-- Semantic Scaffolding
-- Examples & Use Cases
-- Design Philosophy
-- Contributor Guide
-- Manifesto
-
----
-
-## 🤝 Contributing
-
-We welcome thoughtful contributions that align with the framework’s philosophy.  
-Please read the Contributor Guide before submitting a PR.
-
----
-
 ## 🧬 License
 
 MIT License © Neil Crago  
