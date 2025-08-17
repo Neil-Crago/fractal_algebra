@@ -39,7 +39,7 @@ pub fn test_mul_identity() -> bool {
     let a = canonical_test_fractal();
     let one = FractalField::one();
 
-    a.multiply(&one).edges == a.edges
+    a.mul(&one).edges == a.edges
 }
 
 pub fn test_for_distributivity() -> bool {
@@ -47,8 +47,8 @@ pub fn test_for_distributivity() -> bool {
     let b = a.scale(Complex::new(2.0, 0.0));
     let c = a.scale(Complex::new(3.0, 0.0));
 
-    let left = a.multiply(&b.add(&c));
-    let right = a.multiply(&b).add(&a.multiply(&c));
+    let left = a.mul(&b.add(&c));
+    let right = a.mul(&b).add(&a.mul(&c));
 
     left.edges == right.edges
 }

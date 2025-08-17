@@ -1,10 +1,18 @@
-use fractal_algebra::traits::mul_fractals;
-use fractal_algebra::traits::Mandelbrot;
 use fractal_algebra::traits::IFS;
+use fractal_algebra::traits::Mandelbrot;
+use fractal_algebra::traits::mul_fractals;
 
 fn main() {
-    let m1 = Mandelbrot { center_re: -0.5, center_im: 0.0, zoom: 1.0 };
-    let m2 = Mandelbrot { center_re: 0.3, center_im: 0.6, zoom: 2.0 };
+    let m1 = Mandelbrot {
+        center_re: -0.5,
+        center_im: 0.0,
+        zoom: 1.0,
+    };
+    let m2 = Mandelbrot {
+        center_re: 0.3,
+        center_im: 0.6,
+        zoom: 2.0,
+    };
     let ifs1 = IFS { transform_count: 4 };
     let ifs2 = IFS { transform_count: 3 };
 
@@ -29,6 +37,9 @@ fn main() {
     println!("2. Using specialized methods:");
     let transformed_mandelbrot = m1.transform_by(&m2);
     let composed_ifs = ifs1.compose_with(&ifs2);
-    println!("Transformed Mandelbrot Result: {:#?}", transformed_mandelbrot);
+    println!(
+        "Transformed Mandelbrot Result: {:#?}",
+        transformed_mandelbrot
+    );
     println!("Composed IFS Result: {:#?}\n", composed_ifs);
 }

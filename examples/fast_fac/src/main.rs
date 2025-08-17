@@ -6,7 +6,7 @@ fn main() {
 
     let n = 50;
     println!("\nCalculating prime factorization of {}!...", n);
-    
+
     let start_time = std::time::Instant::now();
     let factors = engine.get_factorial_factorization(n);
     let duration = start_time.elapsed();

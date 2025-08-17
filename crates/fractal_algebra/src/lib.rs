@@ -17,6 +17,8 @@ pub mod traits;
 pub mod vec3;
 pub mod graph;
 pub mod time;
+pub mod resonance;
+pub mod filters;
 
 
 pub use constants::MODULUS;
@@ -33,9 +35,14 @@ pub use rfg::RandomFieldGenerator;
 pub use signature::FractalSignature;
 pub use stochastic::StochasticAmplitudePhase;
 pub use testkit::canonical_test_fractal;
+
 pub use tests::{
-    test_add_associativity, test_add_commutativity, test_add_identity, test_add_inverse,
-    test_for_distributivity, test_mul_identity,
+    test_add_associativity, 
+    test_add_commutativity, 
+    test_add_identity, 
+    test_add_inverse,
+    test_for_distributivity, 
+    test_mul_identity,
 };
 pub use traits::{
     Critic,
@@ -59,7 +66,25 @@ pub use traits::{
 
 pub use vec3::Vec3;
 pub use graph::{FractalGraph, FactorialNode};
-pub use time::{FractalSpacetime, SpacetimeCoordinate, Evolvable};
+
+pub use time::{
+    FractalSpacetime, 
+    SpacetimeCoordinate, 
+    Evolvable};
+
+pub use resonance::{
+    Resonance, 
+    ResonanceLaw, 
+    ResonanceFilter, 
+    ResonantTransform, 
+    TransformResonanceLaw, 
+    CompositeTransform};
+
+pub use filters::{
+    LawFilter, 
+    ScoreFilter, 
+    PredicateFilter, 
+    FilterTrace};
 
 
 #[macro_use]

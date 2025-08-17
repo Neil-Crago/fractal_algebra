@@ -5,15 +5,16 @@ use crate::field::FractalField;
 use crate::fractaledge::FractalEdge;
 use crate::graphedge::GraphEdge;
 use crate::signature::FractalSignature;
+use crate::resonance::ResonanceLaw;
 use num_complex::Complex;
 use num_complex::ComplexFloat;
 use std::fmt::Debug;
+use std::f64::consts::PI;
 
 
 pub trait FractalAlgebra {
     fn add(&self, other: &Self) -> Self;
     fn scale(&self, factor: Complex<f32>) -> Self;
-    fn multiply(&self, other: &Self) -> Self;
     fn zero() -> Self;
     fn sub(&self, other: &Self) -> Self;
     fn mul(&self, rhs: &Self) -> Self;
@@ -44,14 +45,6 @@ impl FractalAlgebra for FractalEdge {
             amplitude: self.amplitude * factor,
             location: self.location,
             phase: self.phase + factor.arg(),
-        }
-    }
-
-    fn multiply(&self, other: &Self) -> Self {
-        FractalEdge {
-            amplitude: self.amplitude * other.amplitude,
-            location: self.location + other.location,
-            phase: self.phase + other.phase,
         }
     }
 
@@ -120,7 +113,11 @@ impl FractalRing for FractalEdge {
     }
 
     fn zero() -> Self {
-        FractalAlgebra::zero()
+        FractalEdge {
+            amplitude: Complex::new(0.0, 0.0),
+            location: 0,
+            phase: 0.0,
+        }
     }
 
     fn one() -> Self {
@@ -221,7 +218,7 @@ impl FractalRing for FractalField {
     }
 
     fn zero() -> Self {
-        FractalAlgebra::zero()
+        FractalField { edges: Vec::new() }
     }
 
     fn one() -> Self {
@@ -375,7 +372,12 @@ impl Clone for Box<dyn Fractal> {
 
 /// The base trait for all fractal types.
 /// It requires Clone, Debug, and a static lifetime.
-pub trait Fractal: FractalClone + Debug + 'static {}
+/// Only object-safe methods are allowed for dyn compatibility.
+pub trait Fractal: FractalClone + Debug + 'static {
+    fn resonance_law(&self) -> ResonanceLaw; // This is fine
+    fn resonance_score(&self) -> f64;
+}
+
 
 /// The operation to be applied to a member within a collection.
 /// This is the core of the CSG (Constructive Solid Geometry) approach.
@@ -385,14 +387,38 @@ pub enum Operation {
     Difference,  // Subtractive operation (-)
     Intersection, // Multiplicative operation (*)
 }
+/// Enum to wrap all supported fractal types.
+#[derive(Debug, Clone)]
+pub enum FractalType {
+    Mandelbrot(Mandelbrot),
+    IFS(IFS),
+    // Add more variants as needed
+}
+
+impl Fractal for FractalType {
+    fn resonance_law(&self) -> ResonanceLaw {
+        match self {
+            FractalType::Mandelbrot(m) => m.resonance_law(),
+            FractalType::IFS(i) => i.resonance_law(),
+        }
+    }
+
+    fn resonance_score(&self) -> f64 {
+        match self {
+            FractalType::Mandelbrot(m) => m.resonance_score(),
+            FractalType::IFS(i) => i.resonance_score(),
+        }
+    }
+}
 
 /// A member of the FractalCollection, containing the fractal
 /// itself and the operation that connects it to the rest of the collection.
 #[derive(Debug, Clone)]
 pub struct CollectionMember {
-    pub fractal: Box<dyn Fractal>,
+    pub fractal: FractalType,
     pub operation: Operation,
 }
+
 
 /// Represents a collection of fractals and their relationships.
 /// This is the primary output of most algebraic operations.
@@ -405,21 +431,38 @@ pub struct FractalCollection {
 // 2. CONCRETE FRACTAL TYPE DEFINITIONS (EXAMPLES)
 //-///////////////////////////////////////////////////////////////////////////
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Default)]
 pub struct Mandelbrot {
     pub center_re: f64,
     pub center_im: f64,
     pub zoom: f64,
 }
-impl Fractal for Mandelbrot {}
+impl Fractal for Mandelbrot {
+    fn resonance_score(&self) -> f64 {
+        // Score = amplitude magnitude × phase alignment factor
+        let amp = self.center_re.abs() + self.center_im.abs() + self.zoom.abs();
+        let phase_alignment = (1.0 - (self.center_re % (2.0 * PI)).cos()).abs();
+        amp * phase_alignment
+    }
+    fn resonance_law(&self) -> ResonanceLaw {
+        ResonanceLaw::Echo
+    }
 
-#[derive(Debug, Clone)]
+}
+
+#[derive(Debug, Clone, Default)]
 pub struct IFS {
-    // An Iterated Function System would be a list of transformations (matrices).
-    // Using a simple u32 for demonstration.
     pub transform_count: u32,
 }
-impl Fractal for IFS {}
+impl Fractal for IFS {
+    fn resonance_score(&self) -> f64 {
+        // Score = transform count × average transformation complexity
+        self.transform_count as f64 * 1.0 // Placeholder for complexity
+    }
+    fn resonance_law(&self) -> ResonanceLaw {
+        ResonanceLaw::FractalGrowth
+    }
+}
 
 
 impl Mandelbrot {
@@ -468,6 +511,39 @@ impl IFS {
     }
 }
 
+
+impl FractalCollection {
+    pub fn resonance_scores(&self) -> Vec<f64> {
+        self.members
+            .iter()
+            .map(|member| match &member.fractal {
+                FractalType::Mandelbrot(m) => <Mandelbrot as Fractal>::resonance_score(m),
+                FractalType::IFS(i) => <IFS as Fractal>::resonance_score(i),
+            })
+            .collect()
+    }
+
+    pub fn resonance_laws(&self) -> Vec<ResonanceLaw> {
+        self.members
+            .iter()
+            .map(|member| match &member.fractal {
+                FractalType::Mandelbrot(m) => <Mandelbrot as Fractal>::resonance_law(m),
+                FractalType::IFS(i) => <IFS as Fractal>::resonance_law(i),
+            })
+            .collect()
+    }
+
+    fn _average_resonance(&self) -> f64 {
+        let scores = self.resonance_scores();
+        if scores.is_empty() {
+            0.0
+        } else {
+            scores.iter().copied().sum::<f64>() / scores.len() as f64
+        }
+    }
+}
+
+
 /// A trait defining algebraic operations for fractal fields.
 impl FractalAlgebra for FractalField {
     fn add(&self, other: &Self) -> Self {
@@ -493,6 +569,10 @@ impl FractalAlgebra for FractalField {
         }
 
         FractalField { edges: result }
+    }
+
+    fn zero() -> Self {
+        FractalField { edges: Vec::new() }
     }
 
     fn sub(&self, other: &Self) -> Self {
@@ -553,36 +633,10 @@ impl FractalAlgebra for FractalField {
         FractalField { edges }
     }
 
-    fn multiply(&self, other: &Self) -> Self {
-        let mut result = Vec::new();
-
-        for edge in &self.edges {
-            if let Some(matching) = other
-                .edges
-                .iter()
-                .find(|e2| e2.origin == edge.origin && e2.direction == edge.direction)
-            {
-                result.push(GraphEdge {
-                    origin: edge.origin,
-                    direction: edge.direction,
-                    length: edge.length * matching.length,
-                    depth: edge.depth,
-                    data: edge.data * matching.data,
-                });
-            }
-        }
-
-        FractalField { edges: result }
-    }
-
-    fn zero() -> Self {
-        FractalField { edges: Vec::new() }
-    }
 }
 
-
 // This allows operations like `mandelbrot + ifs`.
-pub fn add_fractals(a: &Box<dyn Fractal>, b: &Box<dyn Fractal>) -> FractalCollection {
+pub fn add_fractals(a: &FractalType, b: &FractalType) -> FractalCollection {
     FractalCollection {
         members: vec![
             CollectionMember { fractal: a.clone(), operation: Operation::Union },
@@ -591,7 +645,7 @@ pub fn add_fractals(a: &Box<dyn Fractal>, b: &Box<dyn Fractal>) -> FractalCollec
     }
 }
 
-pub fn sub_fractals(a: &Box<dyn Fractal>, b: &Box<dyn Fractal>) -> FractalCollection {
+pub fn sub_fractals(a: &FractalType, b: &FractalType) -> FractalCollection {
     FractalCollection {
         members: vec![
             CollectionMember { fractal: a.clone(), operation: Operation::Union },
@@ -600,7 +654,7 @@ pub fn sub_fractals(a: &Box<dyn Fractal>, b: &Box<dyn Fractal>) -> FractalCollec
     }
 }
 
-pub fn mul_fractals(a: &Box<dyn Fractal>, b: &Box<dyn Fractal>) -> FractalCollection {
+pub fn mul_fractals(a: &FractalType, b: &FractalType) -> FractalCollection {
     FractalCollection {
         members: vec![
             CollectionMember { fractal: a.clone(), operation: Operation::Union },
@@ -608,6 +662,7 @@ pub fn mul_fractals(a: &Box<dyn Fractal>, b: &Box<dyn Fractal>) -> FractalCollec
         ],
     }
 }
+
 
 // Implementation to allow chaining operations on a `FractalCollection`.
 // This enables expressions like `(A + B) * C`.
@@ -629,6 +684,10 @@ impl FractalAlgebra for FractalCollection {
         FractalCollection { members }
     }
 
+    fn zero() -> Self {
+        FractalCollection { members: Vec::new() }
+    }
+
     fn mul(&self, other: &Self) -> Self {
         let mut members = self.members.clone();
         for member in &other.members {
@@ -644,13 +703,4 @@ impl FractalAlgebra for FractalCollection {
         // Scaling not implemented for FractalCollection
         self.clone()
     }
-
-    fn multiply(&self, other: &Self) -> Self {
-        self.mul(other)
     }
-
-    fn zero() -> Self {
-        FractalCollection { members: Vec::new() }
-    }
-}
-

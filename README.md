@@ -1,3 +1,8 @@
+
+<p align="center">
+  <img src="crates/fractal_algebra/docs/assets/big_fractal_algebra.svg" alt="Fractal Algebra Banner" width="30%" />
+</p>  
+
 # Fractal Algebra Workspace
 
 **A research workspace for exploring the deep connections between number theory, algebra, and geometry.**

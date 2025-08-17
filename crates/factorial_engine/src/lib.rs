@@ -10,7 +10,9 @@ pub struct FactorialEngine {
 impl FactorialEngine {
     /// Creates a new engine. Can optionally pre-sieve primes up to a limit.
     pub fn new(sieve_up_to: Option<u64>) -> Self {
-        let mut engine = FactorialEngine { primes_cache: Vec::new() };
+        let mut engine = FactorialEngine {
+            primes_cache: Vec::new(),
+        };
         if let Some(limit) = sieve_up_to {
             engine.sieve_primes(limit);
         }
@@ -19,7 +21,9 @@ impl FactorialEngine {
 
     /// Generates and caches primes up to a given limit using a Sieve of Eratosthenes.
     fn sieve_primes(&mut self, limit: u64) {
-        if limit < 2 { return; }
+        if limit < 2 {
+            return;
+        }
         let mut is_prime = vec![true; (limit + 1) as usize];
         is_prime[0] = false;
         is_prime[1] = false;
@@ -31,7 +35,9 @@ impl FactorialEngine {
                 }
             }
         }
-        self.primes_cache = is_prime.iter().enumerate()
+        self.primes_cache = is_prime
+            .iter()
+            .enumerate()
             .filter(|&(_, &is_p)| is_p)
             .map(|(p, _)| p as u64)
             .collect();
@@ -64,17 +70,16 @@ impl FactorialEngine {
         if self.primes_cache.last().map_or(true, |&max_p| max_p < n) {
             self.sieve_primes(n);
         }
-        
+
         let mut factorization = HashMap::new();
-        
+
         for &p in self.primes_cache.iter().take_while(|&&pr| pr <= n) {
             let exponent = self.calculate_exponent(n, p);
             if exponent > 0 {
                 factorization.insert(p, exponent);
             }
         }
-        
+
         factorization
     }
 }
-

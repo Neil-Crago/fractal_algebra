@@ -28,11 +28,11 @@ fn get_barnsley_fern_ifs() -> Vec<TMA> {
 
 fn main() {
     println!("Fractal Algebra Workspace: Barnsley Fern session.");
-    
+
     // 1. Define the IFS for the Barnsley Fern
     let fern_tmas = get_barnsley_fern_ifs();
     let fern_ifs = IFS::new(fern_tmas).expect("Failed to create Barnsley Fern IFS.");
-    
+
     // 2. Run the Chaos Game
     let num_points = 150_000;
     let warmup = 200;
@@ -44,7 +44,7 @@ fn main() {
     let renderer = Renderer::new(2048, 2048);
     let filename = "barnsley_fern.png";
     println!("Rendering image to {}...", filename);
-    
+
     // The render function now expects the data with color info
     match renderer.render(&fractal_data, filename) {
         Ok(_) => println!("Successfully saved image."),
