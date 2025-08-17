@@ -1,6 +1,6 @@
 
 <p align="center">
-  <img src="crates/fractal_algebra/docs/assets/big_fractal_algebra.svg" alt="Fractal Algebra Banner" width="30%" />
+  <img src="crates/fractal_algebra/docs/assets/logo.png" alt="Fractal Algebra Banner" width="400" />
 </p>  
 
 # Fractal Algebra Workspace

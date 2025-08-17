@@ -1,7 +1,7 @@
 <p align="center">
-  <img src="docs/assets/big_fractal_algebra.svg" alt="Fractal Algebra Banner" width="30%" />
+  <img src="docs/assets/logo.png" alt="Fractal Algebra logo" width="400" />
 </p>    
-
+</div>
 # Fractal Algebra
 
 This is the primary research and application crate where the computational and geometric engines are brought together. It focuses on discovering and analyzing the emergent structures from number-theoretic data.
