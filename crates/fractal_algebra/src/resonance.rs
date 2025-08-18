@@ -1,7 +1,8 @@
 use std::any::Any; // ADDED: Import the Any trait for downcasting
 use std::f32::consts::PI;
 use crate::fractaledge::FractalEdge;
-use crate::traits::Fractal;
+use crate::signature::FractalSignature;
+use crate::traits::{Fractal, FractalCollection, FractalQuantumSpace, Operation, CollectionMember};
 
 /// Trait representing the resonance of a mathematical or computational object.
 /// Resonance may reflect phase alignment, recursive coherence, entropy modulation,
@@ -285,19 +286,12 @@ where
     }
 }
 
-/*
-pub struct Transform {
-    pub name: String, // e.g. "Initial Phase Shift", "Damping", "Rotation"
-    pub operation: Box<dyn Operation>,
-}
-*/
-
+/// A filter that selects semantic units based on resonance criteria.
 pub trait ResonanceFilter {
-    /// Returns true if the fractal passes the filter.
+    fn apply(&self, units: &[SemanticUnit]) -> Vec<SemanticUnit>;
     fn passes(&self, fractal: &dyn Fractal) -> bool;
 }
 
-/*
 pub struct ResonanceRuleEngine {
     pub filters: Vec<Box<dyn ResonanceFilter>>,
     pub operation_rules: Vec<OperationRule>,
@@ -345,7 +339,7 @@ pub fn diagnostics(&self, collection: &FractalCollection) -> Vec<String> {
         .collect()
 }
 }
-*/
+
 
 /*
 // Usage
@@ -366,3 +360,51 @@ let engine = ResonanceRuleEngine {
 };
 */
 
+/// A symbolic quantum fragment—could be a wavefunction, law, or transformation
+#[derive(Clone, Debug, PartialEq)]
+pub struct SemanticUnit {
+    pub label: String,
+    pub depth: usize,
+    pub phase: f64, // Optional: phase angle for resonance
+}
+
+/// A rule that transforms a semantic unit into deeper structure
+pub struct ResonanceRule {
+    pub transformation: fn(&SemanticUnit) -> Vec<SemanticUnit>,
+}
+
+/// A fractal quantum space implemented as a semantic lattice
+pub struct SemanticLattice {
+    pub units: Vec<SemanticUnit>,
+    pub depth: usize,
+}
+
+impl FractalQuantumSpace for SemanticLattice {
+    type SemanticUnit = SemanticUnit;
+
+    fn resonance_depth(&self) -> usize {
+        self.depth
+    }
+
+    fn project(&self, depth: usize) -> Vec<Self::SemanticUnit> {
+        self.units.iter().filter(|u| u.depth == depth).cloned().collect()
+    }
+
+    fn transform(&mut self, rule: &ResonanceRule) {
+        let new_units: Vec<SemanticUnit> = self.units
+            .iter()
+            .filter(|u| u.depth == self.depth)
+            .flat_map(|u| (rule.transformation)(u))
+            .collect();
+        self.units.extend(new_units);
+        self.depth += 1;
+    }
+
+    fn filter(&self, filter: &dyn ResonanceFilter) -> Vec<Self::SemanticUnit> {
+        filter.apply(&self.units)
+    }
+
+    fn fractal_signature(&self) -> FractalSignature {
+        FractalSignature::from_units(&self.units)
+    }
+}

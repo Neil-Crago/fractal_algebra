@@ -2,18 +2,23 @@
   <img src="docs/assets/logo.png" alt="Fractal Algebra logo" width="400" />
 </p>    
 </div>
+
 # Fractal Algebra
 
 This is the primary research and application crate where the computational and geometric engines are brought together. It focuses on discovering and analyzing the emergent structures from number-theoretic data.
 
-One of the key innovations in this crate is the **`FractalGraph`**:
+Thia includes a number of innovations including the following:
+
+ ## FractalGraph
 
 - A custom data structure designed as a hybrid of a graph, a trie, and a spatial index.
 - It moves beyond simple visualization to create a rich, explorable network of relationships between numbers based on their prime factorizations.
 - Nodes in the graph represent `n!`, and relationships (edges) are formed dynamically based on mathematical similarity and shared number-theoretic traits.
 - Traversal of the graph mimics fractal expansion: recursive, self-similar, and semantically rich.
 
-Another important innovation is that of **Resonance Algebra** a trait-based algebraic extension for composing, transforming, and evaluating mathematical objects based on resonance. It encodes semantic meaning directly into traits, operations, and laws—bridging mathematical abstraction with computational clarity.
+## Resonance Algebra
+
+This is a trait-based algebraic extension for composing, transforming, and evaluating mathematical objects based on resonance. It encodes semantic meaning directly into traits, operations, and laws—bridging mathematical abstraction with computational clarity.
 
 #### This includes:
 
@@ -25,7 +30,7 @@ Another important innovation is that of **Resonance Algebra** a trait-based alge
 - ResonanceFilter for semantic selection and pruning
 - ResonanceRuleEngine for enforcing algebraic laws
 
-## 🧪 Example Usage (for Resonance)
+### 🧪 Example Usage (for Resonance)
 
 ```rust
 let a = FractalEdge::new(...); // Harmony, score 0.8
@@ -40,8 +45,33 @@ let filter = LawFilter {
 let filtered = resonant_collection.filter(&filter);
 ```
 
----
+## A Fractal Quantum Space
 
+A Semantic Manifold of Infinite Resonance
+
+FractalQuantumSpace is not a simulation of quantum mechanics. It is a semantic engine that encodes the fractal nature of reality—where each quantum event is a recursive transformation, and each dimension is a resonance axis.
+
+### Why Infinite Dimensions?
+
+In classical physics, dimensions are fixed. In quantum mechanics, they’re functional. But in a fractal ontology, dimensions are emergent—each transformation reveals new structure. There is no upper bound.
+
+### Core Concepts
+
+- SemanticUnit: The atomic unit of meaning—could be a wavefunction, a law fragment, or a resonance node.
+- ResonanceDepth: How deep the space has unfolded through recursive transformation.
+- Projection: Observation is modeled as projection onto a finite slice of the infinite manifold.
+- Transformation: Applying a rule deepens the structure, revealing new semantic layers.
+- Filtering: Selects meaningful subsets based on resonance criteria.
+- FractalSignature: A symbolic fingerprint of the current state—useful for comparison, visualization, or law enforcement.
+
+### Use Cases
+
+- Modeling recursive quantum systems
+- Encoding semantic laws as transformations
+- Visualizing resonance depth and structure
+- Building epistemic engines that evolve meaningfully
+
+---
 
 ## Related Projects within the workspace
 
@@ -63,14 +93,14 @@ The project investigates concepts such as:
 - The nature of time and observation in a universe with fractal structure.
 
 
-## 🧬 License
+## License
 
-MIT License © Neil Crago  
+MIT or Apache License © Neil Crago  
 This project is open-source and designed for philosophical and mathematical exploration.
 
 ---
 
-## 🌱 A Final Note
+## A Final Note
 
 > “This is not just a framework. It is a way of thinking.”
 `

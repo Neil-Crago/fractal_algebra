@@ -336,7 +336,7 @@ dependencies = [
 
 [[package]]
 name = "fractal_algebra"
-version = "0.1.9"
+version = "0.2.0"
 dependencies = [
  "factorial_engine 0.1.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "num-complex",

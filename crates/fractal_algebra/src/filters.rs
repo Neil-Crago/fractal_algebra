@@ -1,6 +1,5 @@
 use crate::traits::{Fractal, FractalCollection};
-use crate::resonance::{ResonanceLaw, ResonanceFilter};
-
+use crate::resonance::{ResonanceLaw, ResonanceFilter, SemanticUnit};
 
 pub struct LawFilter {
     pub allowed: Vec<ResonanceLaw>,
@@ -9,6 +8,14 @@ pub struct LawFilter {
 impl ResonanceFilter for LawFilter {
     fn passes(&self, fractal: &dyn Fractal) -> bool {
         self.allowed.contains(&fractal.resonance_law())
+    }
+
+    fn apply(&self, units: &[SemanticUnit]) -> Vec<SemanticUnit> {
+        units.iter()
+            // Example: filter by label instead of law
+            .filter(|u| self.allowed.iter().any(|law| u.label == law.to_string()))
+            .cloned()
+            .collect()
     }
 }
 
@@ -20,15 +27,32 @@ impl ResonanceFilter for ScoreFilter {
     fn passes(&self, fractal: &dyn Fractal) -> bool {
         fractal.resonance_score() >= self.min_score
     }
+
+    fn apply(&self, units: &[SemanticUnit]) -> Vec<SemanticUnit> {
+        // No 'score' field available, so filter by 'phase' as a proxy for score
+        units.iter()
+            .filter(|u| u.phase >= self.min_score)
+            .cloned()
+            .collect()
+    }
 }
 
 pub struct PredicateFilter {
-    pub predicate: Box<dyn Fn(&dyn Fractal) -> bool>,
+    pub predicate: Box<dyn Fn(&SemanticUnit) -> bool>,
 }
 
 impl ResonanceFilter for PredicateFilter {
-    fn passes(&self, fractal: &dyn Fractal) -> bool {
-        (self.predicate)(fractal)
+    fn passes(&self, _fractal: &dyn Fractal) -> bool {
+        // Not possible to use the predicate directly on Fractal, so always return true or false.
+        // You may want to implement this differently depending on your use case.
+        true
+    }
+
+    fn apply(&self, units: &[SemanticUnit]) -> Vec<SemanticUnit> {
+        units.iter()
+            .filter(|u| (self.predicate)(u))
+            .cloned()
+            .collect()
     }
 }
 
@@ -49,6 +73,32 @@ impl ResonanceFilter for ComposedFilter {
             FilterLogic::And => self.filters.iter().all(|f| f.passes(fractal)),
             FilterLogic::Or => self.filters.iter().any(|f| f.passes(fractal)),
             FilterLogic::Not => !self.filters[0].passes(fractal), // unary NOT
+        }
+    }
+
+    fn apply(&self, units: &[SemanticUnit]) -> Vec<SemanticUnit> {
+        match self.logic {
+            FilterLogic::And => {
+                self.filters.iter().fold(units.to_vec(), |acc, f| f.apply(&acc))
+            }
+            FilterLogic::Or => {
+                let mut result = Vec::new();
+                for f in &self.filters {
+                    for unit in f.apply(units) {
+                        if !result.contains(&unit) {
+                            result.push(unit);
+                        }
+                    }
+                }
+                result
+            }
+            FilterLogic::Not => {
+                let filtered = self.filters[0].apply(units);
+                units.iter()
+                    .filter(|u| !filtered.contains(u))
+                    .cloned()
+                    .collect()
+            }
         }
     }
 }
@@ -138,3 +188,5 @@ impl ResonantFractalCollection {
         }
     }
 }
+
+

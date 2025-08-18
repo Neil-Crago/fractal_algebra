@@ -6,6 +6,6 @@ members = [
     "crates/tma_engine",
     "examples/sierpinski",   
     "examples/fast_fac",
-    "examples/mandelbrot"
-, "examples/a_star"]
+    "examples/mandelbrot", 
+    "examples/a_star"]
 
