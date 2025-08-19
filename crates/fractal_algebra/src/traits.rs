@@ -409,8 +409,7 @@ where
     fn is_equal(&self, other: &dyn Fractal) -> bool {
         other
             .as_any()
-            .downcast_ref::<FractalAtom<T>>()
-            .map_or(false, |o| self == o)
+            .downcast_ref::<FractalAtom<T>>() == Some(self)
     }
 
     fn resonance_score(&self) -> f64 {

@@ -1,8 +1,8 @@
+//! atom module
 use crate::resonance::SemanticUnit;
 use crate::traits::SemanticEq;
 use crate::traits::Fractal;
 use std::collections::HashSet;
-/// An atomic element in the fractal algebra, with immutable core and validated metadata.
 use std::hash::Hash;
 use std::fmt::Debug;
 
@@ -88,7 +88,6 @@ where
 
         // Placeholder for metadata validation
         // metadata.validate()?; // We'll define this next
-
         Ok(Self {
             value,
             tags,
@@ -152,7 +151,6 @@ impl TagSet {
     /// - returns `EmptyCollection` if no tags are provided  
     /// - returns `EmptyTag(tag)` if a tag is empty or whitespace  
     /// - returns `DuplicateTag(tag)` if a duplicate is detected
-
     pub fn new<I: IntoIterator<Item = impl Into<String>>>(
         raw_tags: I,
     ) -> Result<Self, TagSetError> {

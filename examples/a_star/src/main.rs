@@ -16,7 +16,7 @@ fn main() {
     let is_blocked = |node: &FactorialNode| {
         for &(prime, exponent) in &node.factorization {
             if prime == 7 {
-                return exponent >= 3 && exponent <= 7;
+                return (3..=7).contains(&exponent);
             }
         }
         false
@@ -38,7 +38,7 @@ fn main() {
             println!("\nPath found!");
             println!("{:?}", path);
             assert!(
-                path.iter().all(|&n| n < 21 || n > 48),
+                path.iter().all(|&n| !(21..=48).contains(&n)),
                 "Path illegally entered a blocked region!"
             );
             println!(

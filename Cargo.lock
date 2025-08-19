@@ -6,7 +6,7 @@ version = 4
 name = "a_star"
 version = "0.1.0"
 dependencies = [
- "factorial_engine 0.1.1 (registry+https://github.com/rust-lang/crates.io-index)",
+ "factorial_engine 0.1.1",
  "fractal_algebra 0.1.7",
 ]
 
@@ -289,18 +289,18 @@ dependencies = [
 [[package]]
 name = "factorial_engine"
 version = "0.1.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "e81b90aef7e2fb64e4ea9547357e85ee2e0c6601a6bdc906bd7ea9c106376a47"
 
 [[package]]
 name = "factorial_engine"
-version = "0.1.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e81b90aef7e2fb64e4ea9547357e85ee2e0c6601a6bdc906bd7ea9c106376a47"
+version = "0.1.2"
 
 [[package]]
 name = "fast_fac"
 version = "0.1.0"
 dependencies = [
- "factorial_engine 0.1.1 (registry+https://github.com/rust-lang/crates.io-index)",
+ "factorial_engine 0.1.1",
  "fractal_algebra 0.1.7",
 ]
 
@@ -329,7 +329,7 @@ version = "0.1.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "cb4b5fab55f11438474e0b2e5481c69bbd6411b113096a495059338cd952d3c3"
 dependencies = [
- "factorial_engine 0.1.1 (registry+https://github.com/rust-lang/crates.io-index)",
+ "factorial_engine 0.1.1",
  "num-complex",
  "rand 0.9.2",
 ]
@@ -338,7 +338,7 @@ dependencies = [
 name = "fractal_algebra"
 version = "0.2.0"
 dependencies = [
- "factorial_engine 0.1.1 (registry+https://github.com/rust-lang/crates.io-index)",
+ "factorial_engine 0.1.1",
  "num-complex",
  "rand 0.9.2",
 ]

@@ -5,6 +5,12 @@ pub struct CriticSuite {
     pub critics: Vec<(Box<dyn Critic>, f32)>, // (critic, weight)
 }
 
+impl Default for CriticSuite {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl CriticSuite {
     /// Creates a new empty suite
     pub fn new() -> Self {

@@ -49,6 +49,12 @@ pub struct FractalGraph {
     pub prime_to_n_index: HashMap<u64, Vec<u64>>,
 }
 
+impl Default for FractalGraph {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl FractalGraph {
     pub fn new() -> Self {
         FractalGraph {
@@ -82,9 +88,6 @@ impl FractalGraph {
     pub fn get_node(&self, n: u64) -> Option<&FactorialNode> {
         self.nodes.get(&n)
     }
-
-    /// Helper function to compute similarity between two factorizations.
-    /// This is a concrete implementation of "shared traits".
 
     // --- The A* Pathfinding Implementation ---
     pub fn find_path_a_star(
@@ -172,11 +175,10 @@ impl FractalGraph {
         // A real implementation would use cosine similarity.
         // For a simple, predictable test, we'll just return adjacent numbers.
         let mut neighbors = Vec::new();
-        if n > 1 {
-            if let Some(node) = self.get_node(n - 1) {
+        if n > 1
+            && let Some(node) = self.get_node(n - 1) {
                 neighbors.push(node);
             }
-        }
         if let Some(node) = self.get_node(n + 1) {
             neighbors.push(node);
         }

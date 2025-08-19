@@ -67,7 +67,7 @@ impl FactorialEngine {
         }
 
         // Ensure we have all necessary primes cached.
-        if self.primes_cache.last().map_or(true, |&max_p| max_p < n) {
+        if self.primes_cache.last().is_none_or(|&max_p| max_p < n) {
             self.sieve_primes(n);
         }
 

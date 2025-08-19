@@ -40,7 +40,7 @@ impl FractalSignature {
 impl FractalSignature {
     pub fn from_units(units: &[crate::resonance::SemanticUnit]) -> Self {
         FractalSignature {
-            total_amplitude: units.iter().map(|u| u.depth as f32).sum::<f32>() as f32,
+            total_amplitude: units.iter().map(|u| u.depth as f32).sum::<f32>(),
             average_phase: units.iter().map(|u| u.phase as f32).sum::<f32>() / units.len() as f32,
             entropy: units.iter().map(|u| u.depth as f32).sum::<f32>() / units.len() as f32,
             edge_count: units.len(),

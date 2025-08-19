@@ -5,6 +5,12 @@ pub struct MutationSuite {
     pub strategies: Vec<(Box<dyn MutationStrategy>, f32)>, // (strategy, weight)
 }
 
+impl Default for MutationSuite {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl MutationSuite {
     pub fn new() -> Self {
         MutationSuite {
