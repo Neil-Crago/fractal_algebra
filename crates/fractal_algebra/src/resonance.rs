@@ -1,8 +1,8 @@
-use std::any::Any; // ADDED: Import the Any trait for downcasting
-use std::f32::consts::PI;
 use crate::fractaledge::FractalEdge;
 use crate::signature::FractalSignature;
-use crate::traits::{Fractal, FractalCollection, FractalQuantumSpace, Operation, CollectionMember};
+use crate::traits::{CollectionMember, Fractal, FractalCollection, FractalQuantumSpace, Operation};
+use std::any::Any; // ADDED: Import the Any trait for downcasting
+use std::f32::consts::PI;
 
 /// Trait representing the resonance of a mathematical or computational object.
 /// Resonance may reflect phase alignment, recursive coherence, entropy modulation,
@@ -84,7 +84,6 @@ impl std::fmt::Display for ResonanceLaw {
     }
 }
 
-
 // This default implementation will need to be updated to match the new trait definition.
 impl<T> Resonance for T
 where
@@ -107,13 +106,12 @@ where
     }
 }
 
-
 impl Resonance for FractalEdge {
     // ADDED: Implementation of the required as_any method.
     fn as_any(&self) -> &dyn Any {
         self
     }
-    
+
     fn resonance_score(&self) -> f64 {
         // Score = amplitude magnitude × phase alignment factor
         let amp = self.amplitude.norm() as f64;
@@ -169,7 +167,6 @@ impl Resonance for FractalEdge {
         ])
     }
 }
-
 
 /// Trait representing a transformation that affects resonance.
 /// Used to model how fractal structures, signals, or recursive systems
@@ -260,9 +257,9 @@ where
     F: ResonantTransform<T>,
 {
     fn apply(&self, input: &T) -> T {
-        self.transforms.iter().fold(input.clone(), |acc, transform| {
-            transform.apply(&acc)
-        })
+        self.transforms
+            .iter()
+            .fold(input.clone(), |acc, transform| transform.apply(&acc))
     }
 
     fn resonance_delta(&self, input: &T) -> f64 {
@@ -290,6 +287,7 @@ where
 pub trait ResonanceFilter {
     fn apply(&self, units: &[SemanticUnit]) -> Vec<SemanticUnit>;
     fn passes(&self, fractal: &dyn Fractal) -> bool;
+    fn as_any(&self) -> &dyn Any;
 }
 
 pub struct ResonanceRuleEngine {
@@ -325,21 +323,19 @@ impl ResonanceRuleEngine {
             .collect()
     }
 
-
-pub fn diagnostics(&self, collection: &FractalCollection) -> Vec<String> {
-    self.validate_collection(collection)
-        .into_iter()
-        .filter_map(|(i, allowed)| {
-            if !allowed {
-                Some(format!("Member {} violates resonance rule", i))
-            } else {
-                None
-            }
-        })
-        .collect()
+    pub fn diagnostics(&self, collection: &FractalCollection) -> Vec<String> {
+        self.validate_collection(collection)
+            .into_iter()
+            .filter_map(|(i, allowed)| {
+                if !allowed {
+                    Some(format!("Member {} violates resonance rule", i))
+                } else {
+                    None
+                }
+            })
+            .collect()
+    }
 }
-}
-
 
 /*
 // Usage
@@ -361,12 +357,24 @@ let engine = ResonanceRuleEngine {
 */
 
 /// A symbolic quantum fragment—could be a wavefunction, law, or transformation
-#[derive(Clone, Debug, PartialEq)]
+#[derive(Clone, Debug)]
 pub struct SemanticUnit {
     pub label: String,
     pub depth: usize,
     pub phase: f64, // Optional: phase angle for resonance
+    pub fractal: Box<dyn Fractal>,
 }
+
+impl PartialEq for SemanticUnit {
+    fn eq(&self, other: &Self) -> bool {
+        self.label == other.label
+            && self.depth == other.depth
+            && self.phase == other.phase
+            && self.fractal.is_equal(&*other.fractal)
+    }
+}
+
+impl Eq for SemanticUnit {}
 
 /// A rule that transforms a semantic unit into deeper structure
 pub struct ResonanceRule {
@@ -387,11 +395,16 @@ impl FractalQuantumSpace for SemanticLattice {
     }
 
     fn project(&self, depth: usize) -> Vec<Self::SemanticUnit> {
-        self.units.iter().filter(|u| u.depth == depth).cloned().collect()
+        self.units
+            .iter()
+            .filter(|u| u.depth == depth)
+            .cloned()
+            .collect()
     }
 
     fn transform(&mut self, rule: &ResonanceRule) {
-        let new_units: Vec<SemanticUnit> = self.units
+        let new_units: Vec<SemanticUnit> = self
+            .units
             .iter()
             .filter(|u| u.depth == self.depth)
             .flat_map(|u| (rule.transformation)(u))

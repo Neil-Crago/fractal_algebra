@@ -1,17 +1,23 @@
+use crate::resonance::{ResonanceFilter, ResonanceLaw, SemanticUnit};
 use crate::traits::{Fractal, FractalCollection};
-use crate::resonance::{ResonanceLaw, ResonanceFilter, SemanticUnit};
+use std::any::Any;
 
 pub struct LawFilter {
     pub allowed: Vec<ResonanceLaw>,
 }
 
 impl ResonanceFilter for LawFilter {
+    fn as_any(&self) -> &dyn Any {
+        self
+    }
+
     fn passes(&self, fractal: &dyn Fractal) -> bool {
         self.allowed.contains(&fractal.resonance_law())
     }
 
     fn apply(&self, units: &[SemanticUnit]) -> Vec<SemanticUnit> {
-        units.iter()
+        units
+            .iter()
             // Example: filter by label instead of law
             .filter(|u| self.allowed.iter().any(|law| u.label == law.to_string()))
             .cloned()
@@ -24,13 +30,18 @@ pub struct ScoreFilter {
 }
 
 impl ResonanceFilter for ScoreFilter {
+    fn as_any(&self) -> &dyn Any {
+        self
+    }
+
     fn passes(&self, fractal: &dyn Fractal) -> bool {
         fractal.resonance_score() >= self.min_score
     }
 
     fn apply(&self, units: &[SemanticUnit]) -> Vec<SemanticUnit> {
         // No 'score' field available, so filter by 'phase' as a proxy for score
-        units.iter()
+        units
+            .iter()
             .filter(|u| u.phase >= self.min_score)
             .cloned()
             .collect()
@@ -42,6 +53,10 @@ pub struct PredicateFilter {
 }
 
 impl ResonanceFilter for PredicateFilter {
+    fn as_any(&self) -> &dyn Any {
+        self
+    }
+
     fn passes(&self, _fractal: &dyn Fractal) -> bool {
         // Not possible to use the predicate directly on Fractal, so always return true or false.
         // You may want to implement this differently depending on your use case.
@@ -49,7 +64,8 @@ impl ResonanceFilter for PredicateFilter {
     }
 
     fn apply(&self, units: &[SemanticUnit]) -> Vec<SemanticUnit> {
-        units.iter()
+        units
+            .iter()
             .filter(|u| (self.predicate)(u))
             .cloned()
             .collect()
@@ -68,6 +84,10 @@ pub struct ComposedFilter {
 }
 
 impl ResonanceFilter for ComposedFilter {
+    fn as_any(&self) -> &dyn Any {
+        self
+    }
+
     fn passes(&self, fractal: &dyn Fractal) -> bool {
         match self.logic {
             FilterLogic::And => self.filters.iter().all(|f| f.passes(fractal)),
@@ -78,9 +98,10 @@ impl ResonanceFilter for ComposedFilter {
 
     fn apply(&self, units: &[SemanticUnit]) -> Vec<SemanticUnit> {
         match self.logic {
-            FilterLogic::And => {
-                self.filters.iter().fold(units.to_vec(), |acc, f| f.apply(&acc))
-            }
+            FilterLogic::And => self
+                .filters
+                .iter()
+                .fold(units.to_vec(), |acc, f| f.apply(&acc)),
             FilterLogic::Or => {
                 let mut result = Vec::new();
                 for f in &self.filters {
@@ -94,7 +115,8 @@ impl ResonanceFilter for ComposedFilter {
             }
             FilterLogic::Not => {
                 let filtered = self.filters[0].apply(units);
-                units.iter()
+                units
+                    .iter()
                     .filter(|u| !filtered.contains(u))
                     .cloned()
                     .collect()
@@ -109,7 +131,6 @@ pub struct FilterTrace {
     pub passed: Vec<usize>, // indices of fractals that passed
     pub failed: Vec<usize>, // indices that failed
 }
-
 
 #[derive(Debug, Clone)]
 pub struct ResonantFractalCollection {
@@ -189,4 +210,75 @@ impl ResonantFractalCollection {
     }
 }
 
+pub struct TagMatchFilter {
+    required_tags: Vec<String>,
+}
 
+impl ResonanceFilter for TagMatchFilter {
+    fn as_any(&self) -> &dyn Any {
+        self
+    }
+
+    fn apply(&self, units: &[SemanticUnit]) -> Vec<SemanticUnit> {
+        units
+            .iter()
+            .filter(|unit| self.passes(&*unit.fractal))
+            .cloned()
+            .collect()
+    }
+
+    fn passes(&self, fractal: &dyn Fractal) -> bool {
+        self.required_tags
+            .iter()
+            .all(|tag| fractal.tags().contains(tag))
+    }
+}
+
+pub struct DomainFilter {
+    domain: String,
+}
+
+impl ResonanceFilter for DomainFilter {
+    fn as_any(&self) -> &dyn Any {
+        self
+    }
+    fn apply(&self, units: &[SemanticUnit]) -> Vec<SemanticUnit> {
+        units
+            .iter()
+            .filter(|unit| self.passes(&*unit.fractal))
+            .cloned()
+            .collect()
+    }
+
+    fn passes(&self, fractal: &dyn Fractal) -> bool {
+        fractal.metadata().domain == self.domain
+    }
+}
+
+pub enum CompositeFilter {
+    All(Vec<Box<dyn ResonanceFilter>>),
+    Any(Vec<Box<dyn ResonanceFilter>>),
+    Not(Box<dyn ResonanceFilter>),
+}
+
+impl ResonanceFilter for CompositeFilter {
+    fn as_any(&self) -> &dyn Any {
+        self
+    }
+
+    fn apply(&self, units: &[SemanticUnit]) -> Vec<SemanticUnit> {
+        units
+            .iter()
+            .filter(|unit| self.passes(&*unit.fractal))
+            .cloned()
+            .collect()
+    }
+
+    fn passes(&self, fractal: &dyn Fractal) -> bool {
+        match self {
+            CompositeFilter::All(filters) => filters.iter().all(|f| f.passes(fractal)),
+            CompositeFilter::Any(filters) => filters.iter().any(|f| f.passes(fractal)),
+            CompositeFilter::Not(filter) => !filter.passes(fractal),
+        }
+    }
+}

@@ -1,6 +1,6 @@
-use std::collections::{HashMap, BinaryHeap};
 use factorial_engine::FactorialEngine;
 use std::cmp::Ordering;
+use std::collections::{BinaryHeap, HashMap};
 
 // A more descriptive name for my vecmap structure.
 // Represents the prime factorization as a list of (prime, exponent) tuples.
@@ -12,9 +12,9 @@ pub struct FactorialNode {
     pub n: u64, // The number n for n!
     pub factorization: FactorizationMap,
     pub category: u32, // For future classification (e.g., based on complexity)
-    
-    // We can cache computed properties like entropy later on.
-    // pub entropy: Option<f64>,
+
+                       // We can cache computed properties like entropy later on.
+                       // pub entropy: Option<f64>,
 }
 
 // --- A* State for the Priority Queue ---
@@ -29,7 +29,10 @@ impl Eq for AStarState {}
 
 impl Ord for AStarState {
     fn cmp(&self, other: &Self) -> Ordering {
-        other.f_score.partial_cmp(&self.f_score).unwrap_or(Ordering::Equal)
+        other
+            .f_score
+            .partial_cmp(&self.f_score)
+            .unwrap_or(Ordering::Equal)
     }
 }
 
@@ -38,7 +41,6 @@ impl PartialOrd for AStarState {
         Some(self.cmp(other))
     }
 }
-
 
 /// A custom graph structure to store and analyze the relationships
 /// between factorial factorizations.
@@ -59,17 +61,14 @@ impl FractalGraph {
     /// `factorization_engine` is the tool we built yesterday.
     pub fn add_node(&mut self, n: u64, engine: &mut FactorialEngine) {
         let factorization_hashmap = engine.get_factorial_factorization(n);
-        
+
         // Convert HashMap to a sorted Vec for a canonical representation.
         let mut factorization_map: FactorizationMap = factorization_hashmap.into_iter().collect();
         factorization_map.sort_by_key(|&(p, _)| p);
 
         // Update the prime_to_n_index
         for &(prime, _) in &factorization_map {
-            self.prime_to_n_index
-                .entry(prime)
-                .or_default()
-                .push(n);
+            self.prime_to_n_index.entry(prime).or_default().push(n);
         }
 
         let node = FactorialNode {
@@ -83,10 +82,10 @@ impl FractalGraph {
     pub fn get_node(&self, n: u64) -> Option<&FactorialNode> {
         self.nodes.get(&n)
     }
-    
+
     /// Helper function to compute similarity between two factorizations.
     /// This is a concrete implementation of "shared traits".
-    
+
     // --- The A* Pathfinding Implementation ---
     pub fn find_path_a_star(
         &self,
@@ -110,7 +109,10 @@ impl FractalGraph {
         // Initialize start node
         g_score.insert(start_n, 0.0);
         let h_score = self.calculate_cost(start_node, goal_node);
-        open_set.push(AStarState { n: start_n, f_score: h_score });
+        open_set.push(AStarState {
+            n: start_n,
+            f_score: h_score,
+        });
 
         while let Some(current_state) = open_set.pop() {
             let current_n = current_state.n;
@@ -138,13 +140,14 @@ impl FractalGraph {
                     continue;
                 }
 
-                let tentative_g_score = g_score[&current_n] + self.calculate_cost(current_node, neighbor_node);
+                let tentative_g_score =
+                    g_score[&current_n] + self.calculate_cost(current_node, neighbor_node);
 
                 if tentative_g_score < g_score[&neighbor_n] {
                     // This path to the neighbor is better than any previous one.
                     came_from.insert(neighbor_n, current_n);
                     g_score.insert(neighbor_n, tentative_g_score);
-                    
+
                     let h_score = self.calculate_cost(neighbor_node, goal_node);
                     open_set.push(AStarState {
                         n: neighbor_n,
@@ -162,15 +165,21 @@ impl FractalGraph {
     fn calculate_cost(&self, node1: &FactorialNode, node2: &FactorialNode) -> f64 {
         1.0 - self.calculate_cosine_similarity(&node1.factorization, &node2.factorization)
     }
-    
+
     // (find_similar_nodes and calculate_cosine_similarity would be implemented here)
     // For this test, we'll mock them to be simple.
     fn find_similar_nodes(&self, n: u64, _top_k: usize) -> Vec<&FactorialNode> {
         // A real implementation would use cosine similarity.
         // For a simple, predictable test, we'll just return adjacent numbers.
         let mut neighbors = Vec::new();
-        if n > 1 { if let Some(node) = self.get_node(n - 1) { neighbors.push(node); } }
-        if let Some(node) = self.get_node(n + 1) { neighbors.push(node); }
+        if n > 1 {
+            if let Some(node) = self.get_node(n - 1) {
+                neighbors.push(node);
+            }
+        }
+        if let Some(node) = self.get_node(n + 1) {
+            neighbors.push(node);
+        }
         neighbors
     }
 
@@ -181,15 +190,15 @@ impl FractalGraph {
         1.0 - (n1 as f64 - n2 as f64).abs() / 100.0
     }
 
-    
     /// A "fractal traversal" query: zoom in on a node's prime components.
     pub fn get_prime_factor_nodes(&self, n: u64) -> Vec<&FactorialNode> {
         match self.get_node(n) {
-            Some(node) => node.factorization.iter()
+            Some(node) => node
+                .factorization
+                .iter()
                 .filter_map(|&(prime, _)| self.get_node(prime))
                 .collect(),
             None => Vec::new(),
         }
     }
 }
-

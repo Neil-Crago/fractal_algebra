@@ -1,3 +1,5 @@
+#[cfg(test)]
+use crate::atom::{TagSet, TagSetError};
 use crate::field::FractalField;
 use crate::testkit::canonical_test_fractal;
 use crate::traits::FractalAlgebra;
@@ -51,4 +53,83 @@ pub fn test_for_distributivity() -> bool {
     let right = a.mul(&b).add(&a.mul(&c));
 
     left.edges == right.edges
+}
+
+#[cfg(test)]
+mod tests {
+    use super::{TagSet, TagSetError};
+
+    #[test]
+    fn new_empty_collection_returns_error() {
+        let input: Vec<String> = vec![];
+        let result = TagSet::new(input);
+        assert_eq!(result, Err(TagSetError::EmptyCollection));
+    }
+
+    #[test]
+    fn new_with_empty_string_tag_returns_error() {
+        let input = vec!["".to_string()];
+        let result = TagSet::new(input);
+        // trimmed tag is "", so we expect an EmptyTag("") error
+        assert_eq!(result, Err(TagSetError::EmptyTag("".to_string())));
+    }
+
+    #[test]
+    fn new_with_whitespace_only_tag_returns_error() {
+        let input = vec!["   ".to_string()];
+        let result = TagSet::new(input);
+        // trimmed tag is "", treated the same as an empty tag
+        assert_eq!(result, Err(TagSetError::EmptyTag("".to_string())));
+    }
+
+    #[test]
+    fn new_with_duplicate_tags_returns_error() {
+        let input = vec![
+            "apple".to_string(),
+            "banana".to_string(),
+            "apple".to_string(),
+        ];
+        let result = TagSet::new(input);
+        // After sort, duplicates are detected on "apple"
+        assert_eq!(result, Err(TagSetError::DuplicateTag("apple".to_string())));
+    }
+
+    #[test]
+    fn new_sorts_and_dedupes_tags_successfully() {
+        let raw = vec![
+            "  zeta ".to_string(),
+            "alpha".to_string(),
+            "beta".to_string(),
+        ];
+        let tags = TagSet::new(raw).expect("should construct successfully");
+        let collected: Vec<String> = tags.iter().cloned().collect();
+        assert_eq!(collected, vec!["alpha", "beta", "zeta"]);
+    }
+
+    #[test]
+    fn contains_detects_existing_and_missing_tags() {
+        let tags = TagSet::new(vec!["one".to_string(), "two".to_string()]).unwrap();
+        assert!(tags.contains("one"));
+        assert!(tags.contains("two"));
+        assert!(!tags.contains("three"));
+    }
+
+    #[test]
+    fn len_and_is_empty_behave_correctly() {
+        let single = TagSet::new(vec!["solo".to_string()]).unwrap();
+        assert_eq!(single.len(), 1);
+        assert!(!single.is_empty());
+
+        // Even after into_iter, original semantics hold
+        let mut iter = single.clone().into_iter();
+        assert_eq!(iter.next(), Some("solo".to_string()));
+        assert_eq!(iter.next(), None);
+    }
+
+    #[test]
+    fn into_iter_returns_all_tags_in_order() {
+        let tags = TagSet::new(vec!["b".to_string(), "a".to_string()]).unwrap();
+        let collected: Vec<String> = tags.into_iter().collect();
+        assert_eq!(collected, vec!["a", "b"]);
+    }
 }

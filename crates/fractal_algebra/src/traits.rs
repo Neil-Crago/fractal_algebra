@@ -1,16 +1,18 @@
 //! defines the FractalAlgebra trait
 
 use crate::Vec3;
+use crate::atom::{FractalAtom, Metadata, TagSet};
 use crate::field::FractalField;
 use crate::fractaledge::FractalEdge;
 use crate::graphedge::GraphEdge;
+use crate::resonance::{ResonanceFilter, ResonanceLaw, ResonanceRule};
 use crate::signature::FractalSignature;
-use crate::resonance::{ResonanceLaw, ResonanceRule, ResonanceFilter};
 use num_complex::Complex;
 use num_complex::ComplexFloat;
-use std::fmt::Debug;
+use std::any::Any;
 use std::f64::consts::PI;
-
+use std::fmt::Debug;
+use std::hash::Hash;
 
 pub trait FractalAlgebra {
     fn add(&self, other: &Self) -> Self;
@@ -18,7 +20,6 @@ pub trait FractalAlgebra {
     fn zero() -> Self;
     fn sub(&self, other: &Self) -> Self;
     fn mul(&self, rhs: &Self) -> Self;
-
 }
 
 pub trait FractalRing: Sized {
@@ -56,7 +57,7 @@ impl FractalAlgebra for FractalEdge {
         }
     }
 
-        /// `sub` implements the `A + (-B)` model.
+    /// `sub` implements the `A + (-B)` model.
     /// It creates a collection with a `Union` (A) and a `Difference` (-B).
     fn sub(&self, other: &Self) -> Self {
         FractalEdge {
@@ -65,16 +66,15 @@ impl FractalAlgebra for FractalEdge {
             phase: self.phase - other.phase,
         }
     }
-    
+
     /// `mul` implements the universal CSG `Intersection` operation.
     fn mul(&self, other: &Self) -> Self {
-     FractalEdge {
+        FractalEdge {
             amplitude: self.amplitude * other.amplitude,
             location: self.location + other.location,
             phase: self.phase + other.phase,
         }
     }
-
 }
 
 impl FractalRing for FractalEdge {
@@ -348,7 +348,6 @@ pub trait MutationStrategy {
     fn mutate(&self, field: &FractalField) -> FractalField;
 }
 
-
 /// A trait to allow cloning of Box<dyn Fractal>.
 /// This is a standard pattern for cloning trait objects in Rust.
 pub trait FractalClone {
@@ -373,18 +372,78 @@ impl Clone for Box<dyn Fractal> {
 /// The base trait for all fractal types.
 /// It requires Clone, Debug, and a static lifetime.
 /// Only object-safe methods are allowed for dyn compatibility.
-pub trait Fractal: FractalClone + Debug + 'static {
-    fn resonance_law(&self) -> ResonanceLaw; // This is fine
+pub trait Fractal: FractalClone + Debug + Any + 'static {
+    /// Returns a reference to the fractal as a trait object.
+    fn as_any(&self) -> &dyn Any;
+
+    /// Checks if two fractals are equal.
+    fn is_equal(&self, other: &dyn Fractal) -> bool;
+
+    /// Returns the resonance law governing this fractal.
+    fn resonance_law(&self) -> ResonanceLaw;
+
+    /// Returns the resonance score of this fractal.
     fn resonance_score(&self) -> f64;
+
+    /// Returns the semantic tags associated with this fractal.
+    fn tags(&self) -> &TagSet;
+
+    /// Returns the metadata describing this fractal.
+    fn metadata(&self) -> &Metadata;
+
+    /// Optional: Returns a unique identifier or label.
+    fn id(&self) -> &str;
+
+    /// Optional: Returns the fractal’s children or substructure.
+    fn children(&self) -> &[Box<dyn Fractal>];
 }
 
+impl<T> Fractal for FractalAtom<T>
+where
+    T: Clone + Eq + Hash + Debug + 'static + Into<f64>,
+{
+    fn as_any(&self) -> &dyn Any {
+        self
+    }
+
+    fn is_equal(&self, other: &dyn Fractal) -> bool {
+        other
+            .as_any()
+            .downcast_ref::<FractalAtom<T>>()
+            .map_or(false, |o| self == o)
+    }
+
+    fn resonance_score(&self) -> f64 {
+        self.value.clone().into()
+    }
+
+    fn resonance_law(&self) -> ResonanceLaw {
+        ResonanceLaw::Echo
+    }
+
+    fn tags(&self) -> &TagSet {
+        &self.tags
+    }
+
+    fn metadata(&self) -> &Metadata {
+        &self.metadata
+    }
+
+    fn id(&self) -> &str {
+        self.metadata.description.as_deref().unwrap_or("unnamed")
+    }
+
+    fn children(&self) -> &[Box<dyn Fractal>] {
+        &[] // Atoms are leaf nodes by default
+    }
+}
 
 /// The operation to be applied to a member within a collection.
 /// This is the core of the CSG (Constructive Solid Geometry) approach.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum Operation {
-    Union,       // Additive operation (+)
-    Difference,  // Subtractive operation (-)
+    Union,        // Additive operation (+)
+    Difference,   // Subtractive operation (-)
     Intersection, // Multiplicative operation (*)
 }
 /// Enum to wrap all supported fractal types.
@@ -396,6 +455,39 @@ pub enum FractalType {
 }
 
 impl Fractal for FractalType {
+    fn as_any(&self) -> &dyn Any {
+        self
+    }
+
+    fn children(&self) -> &[Box<dyn Fractal>] {
+        match self {
+            FractalType::Mandelbrot(m) => m.children(),
+            FractalType::IFS(i) => i.children(),
+        }
+    }
+
+    fn id(&self) -> &str {
+        match self {
+            FractalType::Mandelbrot(m) => m.id(),
+            FractalType::IFS(i) => i.id(),
+        }
+    }
+
+    fn is_equal(&self, other: &dyn Fractal) -> bool {
+        match (self, other.as_any().downcast_ref::<FractalType>()) {
+            (FractalType::Mandelbrot(m1), Some(FractalType::Mandelbrot(m2))) => m1 == m2,
+            (FractalType::IFS(i1), Some(FractalType::IFS(i2))) => i1 == i2,
+            _ => false,
+        }
+    }
+
+    fn metadata(&self) -> &Metadata {
+        match self {
+            FractalType::Mandelbrot(m) => m.metadata(),
+            FractalType::IFS(i) => i.metadata(),
+        }
+    }
+
     fn resonance_law(&self) -> ResonanceLaw {
         match self {
             FractalType::Mandelbrot(m) => m.resonance_law(),
@@ -409,6 +501,13 @@ impl Fractal for FractalType {
             FractalType::IFS(i) => i.resonance_score(),
         }
     }
+
+    fn tags(&self) -> &TagSet {
+        match self {
+            FractalType::Mandelbrot(m) => m.tags(),
+            FractalType::IFS(i) => i.tags(),
+        }
+    }
 }
 
 /// A member of the FractalCollection, containing the fractal
@@ -418,7 +517,6 @@ pub struct CollectionMember {
     pub fractal: FractalType,
     pub operation: Operation,
 }
-
 
 /// Represents a collection of fractals and their relationships.
 /// This is the primary output of most algebraic operations.
@@ -431,13 +529,43 @@ pub struct FractalCollection {
 // 2. CONCRETE FRACTAL TYPE DEFINITIONS (EXAMPLES)
 //-///////////////////////////////////////////////////////////////////////////
 
-#[derive(Debug, Clone, Default)]
+#[derive(Debug, Clone, Default, PartialEq)]
 pub struct Mandelbrot {
     pub center_re: f64,
     pub center_im: f64,
     pub zoom: f64,
+    pub metadata: Metadata,
+    pub tags: TagSet,
 }
+
 impl Fractal for Mandelbrot {
+    fn as_any(&self) -> &dyn Any {
+        self
+    }
+
+    fn children(&self) -> &[Box<dyn Fractal>] {
+        &[]
+    }
+
+    fn id(&self) -> &str {
+        "Mandelbrot"
+    }
+
+    fn is_equal(&self, other: &dyn Fractal) -> bool {
+        match other.as_any().downcast_ref::<Mandelbrot>() {
+            Some(o) => self == o,
+            None => false,
+        }
+    }
+
+    fn metadata(&self) -> &Metadata {
+        &self.metadata
+    }
+
+    fn tags(&self) -> &TagSet {
+        &self.tags
+    }
+
     fn resonance_score(&self) -> f64 {
         // Score = amplitude magnitude × phase alignment factor
         let amp = self.center_re.abs() + self.center_im.abs() + self.zoom.abs();
@@ -447,14 +575,42 @@ impl Fractal for Mandelbrot {
     fn resonance_law(&self) -> ResonanceLaw {
         ResonanceLaw::Echo
     }
-
 }
 
-#[derive(Debug, Clone, Default)]
+#[derive(Debug, Clone, Default, PartialEq)]
 pub struct IFS {
     pub transform_count: u32,
+    pub metadata: Metadata,
+    pub tags: TagSet,
 }
 impl Fractal for IFS {
+    fn as_any(&self) -> &dyn Any {
+        self
+    }
+
+    fn children(&self) -> &[Box<dyn Fractal>] {
+        &[]
+    }
+
+    fn id(&self) -> &str {
+        "IFS"
+    }
+
+    fn is_equal(&self, other: &dyn Fractal) -> bool {
+        match other.as_any().downcast_ref::<IFS>() {
+            Some(o) => self == o,
+            None => false,
+        }
+    }
+
+    fn metadata(&self) -> &Metadata {
+    &self.metadata
+}
+
+fn tags(&self) -> &TagSet {
+    &self.tags
+}
+
     fn resonance_score(&self) -> f64 {
         // Score = transform count × average transformation complexity
         self.transform_count as f64 * 1.0 // Placeholder for complexity
@@ -463,7 +619,6 @@ impl Fractal for IFS {
         ResonanceLaw::FractalGrowth
     }
 }
-
 
 impl Mandelbrot {
     /// Specialized Multiplication: Geometric Transformation.
@@ -475,6 +630,8 @@ impl Mandelbrot {
             center_re: self.center_re + other.center_re,
             center_im: self.center_im + other.center_im,
             zoom: self.zoom * other.zoom,
+            metadata: self.metadata.clone(), // or merge metadata?
+            tags: self.tags.clone(), // or merge tags?
         }
     }
 
@@ -485,6 +642,8 @@ impl Mandelbrot {
             center_re: self.center_re - other.center_re,
             center_im: self.center_im - other.center_im,
             zoom: self.zoom - other.zoom,
+            metadata: self.metadata.clone(), // or merge metadata?
+            tags: self.tags.clone(), // or merge tags?
         }
     }
 
@@ -495,6 +654,8 @@ impl Mandelbrot {
             center_re: self.center_re * other.center_re,
             center_im: self.center_im * other.center_im,
             zoom: self.zoom * other.zoom,
+            metadata: self.metadata.clone(), // or merge metadata?
+            tags: self.tags.clone(), // or merge tags?
         }
     }
 }
@@ -507,10 +668,11 @@ impl IFS {
         // Placeholder logic: The new IFS would have n * m transforms.
         IFS {
             transform_count: self.transform_count * other.transform_count,
+            metadata: self.metadata.clone(), // or merge metadata?
+            tags: self.tags.clone(), // or merge tags?
         }
     }
 }
-
 
 impl FractalCollection {
     pub fn resonance_scores(&self) -> Vec<f64> {
@@ -543,12 +705,10 @@ impl FractalCollection {
     }
 }
 
-
 /// A trait defining algebraic operations for fractal fields.
 impl FractalAlgebra for FractalField {
     fn add(&self, other: &Self) -> Self {
         let mut result = Vec::new();
- 
 
         for edge in &self.edges {
             if let Some(matching) = other
@@ -576,7 +736,7 @@ impl FractalAlgebra for FractalField {
     }
 
     fn sub(&self, other: &Self) -> Self {
-       let mut result = Vec::new();
+        let mut result = Vec::new();
 
         for edge in &self.edges {
             if let Some(matching) = other
@@ -596,7 +756,7 @@ impl FractalAlgebra for FractalField {
 
         FractalField { edges: result }
     }
-    
+
     /// `mul` implements the universal CSG `Intersection` operation.
     fn mul(&self, other: &Self) -> Self {
         let mut result = Vec::new();
@@ -619,7 +779,7 @@ impl FractalAlgebra for FractalField {
 
         FractalField { edges: result }
     }
-    
+
     fn scale(&self, factor: Complex<f32>) -> Self {
         let edges = self
             .edges
@@ -632,15 +792,20 @@ impl FractalAlgebra for FractalField {
 
         FractalField { edges }
     }
-
 }
 
 // This allows operations like `mandelbrot + ifs`.
 pub fn add_fractals(a: &FractalType, b: &FractalType) -> FractalCollection {
     FractalCollection {
         members: vec![
-            CollectionMember { fractal: a.clone(), operation: Operation::Union },
-            CollectionMember { fractal: b.clone(), operation: Operation::Union },
+            CollectionMember {
+                fractal: a.clone(),
+                operation: Operation::Union,
+            },
+            CollectionMember {
+                fractal: b.clone(),
+                operation: Operation::Union,
+            },
         ],
     }
 }
@@ -648,8 +813,14 @@ pub fn add_fractals(a: &FractalType, b: &FractalType) -> FractalCollection {
 pub fn sub_fractals(a: &FractalType, b: &FractalType) -> FractalCollection {
     FractalCollection {
         members: vec![
-            CollectionMember { fractal: a.clone(), operation: Operation::Union },
-            CollectionMember { fractal: b.clone(), operation: Operation::Difference },
+            CollectionMember {
+                fractal: a.clone(),
+                operation: Operation::Union,
+            },
+            CollectionMember {
+                fractal: b.clone(),
+                operation: Operation::Difference,
+            },
         ],
     }
 }
@@ -657,12 +828,17 @@ pub fn sub_fractals(a: &FractalType, b: &FractalType) -> FractalCollection {
 pub fn mul_fractals(a: &FractalType, b: &FractalType) -> FractalCollection {
     FractalCollection {
         members: vec![
-            CollectionMember { fractal: a.clone(), operation: Operation::Union },
-            CollectionMember { fractal: b.clone(), operation: Operation::Intersection },
+            CollectionMember {
+                fractal: a.clone(),
+                operation: Operation::Union,
+            },
+            CollectionMember {
+                fractal: b.clone(),
+                operation: Operation::Intersection,
+            },
         ],
     }
 }
-
 
 // Implementation to allow chaining operations on a `FractalCollection`.
 // This enables expressions like `(A + B) * C`.
@@ -685,7 +861,9 @@ impl FractalAlgebra for FractalCollection {
     }
 
     fn zero() -> Self {
-        FractalCollection { members: Vec::new() }
+        FractalCollection {
+            members: Vec::new(),
+        }
     }
 
     fn mul(&self, other: &Self) -> Self {
@@ -703,9 +881,9 @@ impl FractalAlgebra for FractalCollection {
         // Scaling not implemented for FractalCollection
         self.clone()
     }
-    }
+}
 
-    /// Represents a fractal, infinite-dimensional quantum space
+/// Represents a fractal, infinite-dimensional quantum space
 /// where each dimension corresponds to a semantic axis of resonance.
 /// Transformations reveal deeper structure recursively.
 pub trait FractalQuantumSpace {
@@ -726,4 +904,8 @@ pub trait FractalQuantumSpace {
 
     /// Returns a fractal signature—a symbolic representation of the space's current structure.
     fn fractal_signature(&self) -> FractalSignature;
+}
+
+pub trait SemanticEq {
+    fn semantic_eq(&self, other: &Self) -> bool;
 }

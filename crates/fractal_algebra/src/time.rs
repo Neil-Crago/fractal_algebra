@@ -7,7 +7,6 @@ pub enum SpacetimeCoordinate {
     /// A 4-dimensional reality, defined by a point in Minkowski spacetime.
     /// We use a tuple: (time, x, y, z).
     Minkowski(f64, f64, f64, f64),
-    
     // We could even add others later, like a 2D complex plane.
     // ComplexPlane(Complex<f64>),
 }
@@ -31,7 +30,7 @@ impl Evolvable for FractalSpacetime {
         if let SpacetimeCoordinate::Sequential(initial_state) = self.coordinate {
             // The new 4D state starts at time 0, at the origin.
             self.coordinate = SpacetimeCoordinate::Minkowski(0.0, 0.0, 0.0, 0.0);
-            
+
             // The energy released is a function of the 1D state we came from.
             // This is where the primordial waveform is generated.
             let energy = vec![initial_state.sin(), initial_state.cos()]; // Placeholder

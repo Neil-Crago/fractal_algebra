@@ -45,8 +45,18 @@ impl FractalSignature {
             entropy: units.iter().map(|u| u.depth as f32).sum::<f32>() / units.len() as f32,
             edge_count: units.len(),
             depth_range: (
-                units.iter().map(|u| u.depth).min().map(|v| v as u32).unwrap_or(0),
-                units.iter().map(|u| u.depth).max().map(|v| v as u32).unwrap_or(0),
+                units
+                    .iter()
+                    .map(|u| u.depth)
+                    .min()
+                    .map(|v| v as u32)
+                    .unwrap_or(0),
+                units
+                    .iter()
+                    .map(|u| u.depth)
+                    .max()
+                    .map(|v| v as u32)
+                    .unwrap_or(0),
             ),
         }
     }
