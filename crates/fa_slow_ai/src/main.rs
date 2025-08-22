@@ -28,10 +28,14 @@ fn run_real_experiment(pulse: &EntropyPulse) -> FeedbackSignal {
     system.measure_correlation()
 }
 
-fn main() {
-    println!("--- Slow AI Entanglement Recoherence Experiment ---");
 
-    for k in 1..=5 {
+// The AI's learning loop is implemented in the `main` function below.
+// It sets up the belief space, runs multiple iterations of guessing,
+// and updates its beliefs based on feedback from the real experiment.
+fn main() {
+    println!("\n--- Slow AI Entanglement Recoherence Experiment ---");
+
+    for _k in 1..=25 {
         // 1. Setup the Bayesian learning agent.
         //    We'll start with a wide search range for the frequency.
         let mut belief_space = FrequencyBeliefSpace::new(0.0, 1.0); // Start guess at 0 Hz, amplitude 1.0
@@ -41,15 +45,8 @@ fn main() {
         // see if the AI can discover it. Let's choose a non-obvious number.
         const TARGET_RESONANT_FREQUENCY: f64 = std::f64::consts::PI / 2.0; // approx 1.57
 
-        /*
-        println!(
-            "Target resonant frequency is hidden at: {:.4} rad/s",
-            TARGET_RESONANT_FREQUENCY
-        );
-        */
-
         // 2. The main learning loop.
-        for i in 1..=50_000 {
+        for _i in 1..=10_000 {
             // Run for 100 iterations to give the AI time to learn
             // a. The AI proposes its best guess based on its current beliefs.
             let guess_pulse = belief_space.propose_best_guess();
@@ -68,22 +65,29 @@ fn main() {
             };
 
             let feedback = run_real_experiment(&effective_pulse);
-            /*
-                println!(
-                    "Loop {:>3}: Guessed Freq: {:.4}, Correlation: {:.4}",
-                    i, guess_pulse.frequency, feedback.correlation_strength
-                );
-            */
+
             // c. The AI updates its beliefs based on the feedback from the real experiment.
             belief_space.update(&feedback, &guess_pulse);
         }
 
         //println!("\n--- Learning Complete ---");
         let final_guess = belief_space.propose_best_guess();
+        let metric_fract = (final_guess.frequency / (2.0 * std::f64::consts::PI))
+            .fract()
+            .abs();
+        let mut category = "Saddle Point (Stable Decoherence)"; // Default to saddle point
+
+        // Check if the fractional part is closer to 0.25 than to 0.75
+        // We can check if it's within a certain tolerance of the peak.
+        if (metric_fract - 0.25).abs() < 0.1 {
+            category = "Peak (Coherent Resonance)";
+        }
+
         println!(
-            "Final belief for correct frequency: {:.4} rad/s metric = {:.4}",
+            "guess: {:>.4} rad/s,   \tmetric = {:>.4},  \tcategory = {}",
             final_guess.frequency,
-            final_guess.frequency / (2.0 * std::f64::consts::PI)
+            metric_fract, // It's clearer to print the fractional part
+            category
         );
     }
 }

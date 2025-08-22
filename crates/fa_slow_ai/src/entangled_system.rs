@@ -2,7 +2,7 @@
 //! It contains the graph representing spacetime and the particles within it.
 
 use fa_core::state::{EntropyPulse, FeedbackSignal}; // Import EntropyPulse and FeedbackSignal
-use fractal_algebra::graph::{EdgeType, FractalGraph, FractalGraphEdge, NodeId};
+use fractal_algebra::graph::{EdgeType, FractalGraph, NodeId};
 use num_complex::Complex;
 use rand::Rng;
 use std::collections::HashMap;
@@ -10,6 +10,7 @@ use std::collections::HashMap;
 // --- Data Structures ---
 
 /// Represents a particle as a stable, resonant pattern in the graph.
+#[allow(dead_code)]
 #[derive(Debug, Clone)]
 pub struct ParticleResonance {
     /// The central node of the particle pattern.
@@ -20,6 +21,7 @@ pub struct ParticleResonance {
 }
 
 /// The main container for our quantum experiment.
+#[allow(dead_code)]
 pub struct EntangledSystem {
     pub graph: FractalGraph<()>, // Node payload is empty for now
     pub particles: Vec<ParticleResonance>,
@@ -29,7 +31,7 @@ pub struct EntangledSystem {
 }
 
 // --- Implementation ---
-
+#[allow(dead_code)]
 impl EntangledSystem {
     /// Creates a new simulation environment with two entangled particles.
     pub fn new(width: u64, height: u64) -> Self {
@@ -149,6 +151,7 @@ impl EntangledSystem {
     }
 
     /// Establishes entanglement between two particles by creating a phase-lock.
+    #[allow(unused_variables)]
     fn entangle(&mut self, particle_a_idx: usize, particle_b_idx: usize) {
         // This function establishes a simple anti-correlation (a Bell state).
         // Particle A was initialized with phase 0 (Complex::new(1.0, 0.0)).

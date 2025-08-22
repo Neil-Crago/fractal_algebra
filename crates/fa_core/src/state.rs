@@ -18,6 +18,7 @@ impl EntangledSystem {
             particles: (particle_a, particle_b),
         }
     }
+    #[allow(dead_code)]
     fn create_particle_at(&mut self, node_id: NodeId) -> Option<ParticleResonance> {
         // 1. Get the mutable list of edges for the central node.
         //    We use `if let Some(...)` to safely handle the case where the node might not exist.

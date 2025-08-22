@@ -7,7 +7,6 @@ members = [
     "examples/sierpinski",   
     "examples/fast_fac",
     "examples/mandelbrot", 
-    "crates/fa_group_theory", 
     "crates/fa_bayes", 
     "crates/fa_slow_ai", 
     "crates/fa_core"]
