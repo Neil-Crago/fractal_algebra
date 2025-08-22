@@ -407,9 +407,7 @@ where
     }
 
     fn is_equal(&self, other: &dyn Fractal) -> bool {
-        other
-            .as_any()
-            .downcast_ref::<FractalAtom<T>>() == Some(self)
+        other.as_any().downcast_ref::<FractalAtom<T>>() == Some(self)
     }
 
     fn resonance_score(&self) -> f64 {
@@ -603,12 +601,12 @@ impl Fractal for IFS {
     }
 
     fn metadata(&self) -> &Metadata {
-    &self.metadata
-}
+        &self.metadata
+    }
 
-fn tags(&self) -> &TagSet {
-    &self.tags
-}
+    fn tags(&self) -> &TagSet {
+        &self.tags
+    }
 
     fn resonance_score(&self) -> f64 {
         // Score = transform count × average transformation complexity
@@ -630,7 +628,7 @@ impl Mandelbrot {
             center_im: self.center_im + other.center_im,
             zoom: self.zoom * other.zoom,
             metadata: self.metadata.clone(), // or merge metadata?
-            tags: self.tags.clone(), // or merge tags?
+            tags: self.tags.clone(),         // or merge tags?
         }
     }
 
@@ -642,7 +640,7 @@ impl Mandelbrot {
             center_im: self.center_im - other.center_im,
             zoom: self.zoom - other.zoom,
             metadata: self.metadata.clone(), // or merge metadata?
-            tags: self.tags.clone(), // or merge tags?
+            tags: self.tags.clone(),         // or merge tags?
         }
     }
 
@@ -654,7 +652,7 @@ impl Mandelbrot {
             center_im: self.center_im * other.center_im,
             zoom: self.zoom * other.zoom,
             metadata: self.metadata.clone(), // or merge metadata?
-            tags: self.tags.clone(), // or merge tags?
+            tags: self.tags.clone(),         // or merge tags?
         }
     }
 }
@@ -668,7 +666,7 @@ impl IFS {
         IFS {
             transform_count: self.transform_count * other.transform_count,
             metadata: self.metadata.clone(), // or merge metadata?
-            tags: self.tags.clone(), // or merge tags?
+            tags: self.tags.clone(),         // or merge tags?
         }
     }
 }

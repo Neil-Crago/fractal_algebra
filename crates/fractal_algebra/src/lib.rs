@@ -46,7 +46,7 @@ pub use traits::{
     Operation, SymmetryCritic, add_fractals, mul_fractals, sub_fractals,
 };
 
-pub use graph::{FactorialNode, FractalGraph};
+pub use graph::{FractalGraph, FractalGraphEdge};
 pub use vec3::Vec3;
 
 pub use time::{Evolvable, FractalSpacetime, SpacetimeCoordinate};

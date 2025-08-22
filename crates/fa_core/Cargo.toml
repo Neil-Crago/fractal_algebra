@@ -1,9 +1,8 @@
 [package]
-name = "fa_slow_ai"
+name = "fa_core"
 version = "0.1.0"
 edition = "2024"
 
 [dependencies]
 fractal_algebra = { path = "../fractal_algebra" }
-fa_core = { path = "../fa_core" }
-fa_bayes = { path = "../fa_bayes" }
+num-complex = "0.4.6"

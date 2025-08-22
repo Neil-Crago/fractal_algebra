@@ -10,5 +10,13 @@ members = [
     "examples/a_star",
     "crates/fa_group_theory", 
     "crates/fa_bayes", 
-    "crates/fa_slow_ai"]
+    "crates/fa_slow_ai", 
+    "crates/fa_core"]
 
+# Add this entire section
+[workspace.dependencies]
+rand = "0.9.2"
+rand_distr = "0.5.1"
+fractal_algebra = { version = "0.2.1", path = "./crates/fractal_algebra" }
+fa_core = { version = "0.1.0", path = "./crates/fa_core" }
+# etc. for all shared dependencies

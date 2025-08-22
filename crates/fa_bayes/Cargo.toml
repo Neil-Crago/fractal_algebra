@@ -4,3 +4,6 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
+rand_distr = { workspace = true }
+rand = { workspace = true }
+fa_core = { workspace = true }

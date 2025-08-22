@@ -23,9 +23,9 @@ impl<G: Generator> GeneratorCriticLoop<G> {
                 && (best.is_none()
                     || self.critic_suite.score(candidate)
                         > self.critic_suite.score(best.as_ref().unwrap()))
-                {
-                    best = Some(candidate.clone());
-                }
+            {
+                best = Some(candidate.clone());
+            }
         }
 
         best

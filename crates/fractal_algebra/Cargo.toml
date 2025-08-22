@@ -13,5 +13,5 @@ keywords = ["fractal", "algebra", "mathematics", "complex-numbers"]
 [dependencies]
 factorial_engine = "0.1.1"
 num-complex = "0.4.6"
-rand = "0.9.2"
 thiserror = "2.0.16"
+rand = { workspace = true }

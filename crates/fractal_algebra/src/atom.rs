@@ -1,10 +1,10 @@
 //! atom module
 use crate::resonance::SemanticUnit;
-use crate::traits::SemanticEq;
 use crate::traits::Fractal;
+use crate::traits::SemanticEq;
 use std::collections::HashSet;
-use std::hash::Hash;
 use std::fmt::Debug;
+use std::hash::Hash;
 
 #[derive(Debug, PartialEq, Eq)]
 pub enum AtomError {
@@ -222,10 +222,10 @@ impl<T> SemanticEq for FractalAtom<T>
 where
     T: Clone + Eq + Hash + Debug,
 {
-  fn semantic_eq(&self, other: &Self) -> bool {
-    self.metadata.description == other.metadata.description &&
-    self.tags.semantic_eq(&other.tags)
-}
+    fn semantic_eq(&self, other: &Self) -> bool {
+        self.metadata.description == other.metadata.description
+            && self.tags.semantic_eq(&other.tags)
+    }
 }
 
 impl SemanticEq for TagSet {
