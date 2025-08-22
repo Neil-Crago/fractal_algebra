@@ -9,6 +9,12 @@
 
 This project is a journey into the structures that emerge from simple mathematical rules. It began as an engine for generating classic fractals and has evolved into a dual-purpose workspace for both practical computation and theoretical exploration.
 
+
+[![Crates.io](https://img.shields.io/crates/v/fractal_algebra.svg?style=flat-square)](https://crates.io/crates/fractal_algebra)
+[![Docs.rs](https://img.shields.io/docsrs/fractal_algebra?style=flat-square)](https://docs.rs/fractal_algebra)
+[![License: MIT OR Apache-2.0](https://img.shields.io/badge/license-MIT%20OR%20Apache--2.0-blue?style=flat-square)](https://opensource.org/licenses/MIT)
+[![Rust](https://github.com/Neil-Crago/fractal_algebra/actions/workflows/rust2.yml/badge.svg)](https://github.com/Neil-Crago/fractal_algebra/actions/workflows/rust2.yml)
+
 ## Core Projects
 
 This workspace is structured as a Rust workspace containing several distinct but related crates:

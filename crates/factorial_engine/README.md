@@ -8,7 +8,7 @@ This engine is designed as a robust, backend computational tool. It uses **Legen
 [![Crates.io](https://img.shields.io/crates/v/factorial_engine.svg?style=flat-square)](https://crates.io/crates/factorial_engine)
 [![Docs.rs](https://img.shields.io/docsrs/factorial_engine?style=flat-square)](https://docs.rs/factorial_engine)
 [![License: MIT OR Apache-2.0](https://img.shields.io/badge/license-MIT%20OR%20Apache--2.0-blue?style=flat-square)](https://opensource.org/licenses/MIT)
-[![CI](https://github.com/Neil-Crago/fractal_algebra/.github/workflows/rust.yml/badge.svg)](https://github.com/Neil-Crago/fractal_algebra/.github/workflows/rust.yml)
+[![Rust](https://github.com/Neil-Crago/fractal_algebra/actions/workflows/rust2.yml/badge.svg)](https://github.com/Neil-Crago/fractal_algebra/actions/workflows/rust2.yml)
 
 ## Features
 

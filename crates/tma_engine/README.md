@@ -8,7 +8,7 @@ A lightweight and ergonomic Rust crate for defining, composing, and applying 2D 
 [![Crates.io](https://img.shields.io/crates/v/tma_engine.svg?style=flat-square)](https://crates.io/crates/tma_engine)
 [![Docs.rs](https://img.shields.io/docsrs/tma_engine?style=flat-square)](https://docs.rs/tma_engine)
 [![License: MIT OR Apache-2.0](https://img.shields.io/badge/license-MIT%20OR%20Apache--2.0-blue?style=flat-square)](https://opensource.org/licenses/MIT)
-[![CI](https://github.com/Neil-Crago/fractal_algebra/tree/master/crates/tma_engine/actions/workflows/rust.yml/badge.svg)](https://github.com/Neil-Crago/fractal_algebra/tree/master/crates/tma_engine/actions/workflows/rust.yml)
+[![Rust](https://github.com/Neil-Crago/fractal_algebra/actions/workflows/rust2.yml/badge.svg)](https://github.com/Neil-Crago/fractal_algebra/actions/workflows/rust2.yml)
 
 ## Features
 
