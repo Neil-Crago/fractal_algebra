@@ -1,6 +1,6 @@
 [package]
 name = "fractal_algebra"
-version = "0.2.2"
+version = "0.2.3"
 edition = "2024"
 authors =  ["Neil Crago"]
 description = "A library for fractal algebra experimentation"
@@ -11,7 +11,7 @@ keywords = ["fractal", "algebra", "mathematics", "complex-numbers"]
 
 
 [dependencies]
-factorial_engine = "0.1.3"
+factorial_engine = "0.1.4"
 num-complex = "0.4.6"
 thiserror = "2.0.16"
 rand = { workspace = true }
