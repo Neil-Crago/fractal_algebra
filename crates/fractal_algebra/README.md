@@ -9,6 +9,14 @@ This is the primary research and application crate where the computational and g
 
 Thia includes a number of innovations including the following:
 
+
+[![Crates.io](https://img.shields.io/crates/v/fractal_algebra.svg?style=flat-square)](https://crates.io/crates/fractal_algebra)
+[![Docs.rs](https://img.shields.io/docsrs/fractal_algebra?style=flat-square)](https://docs.rs/fractal_algebra)
+[![License: MIT OR Apache-2.0](https://img.shields.io/badge/license-MIT%20OR%20Apache--2.0-blue?style=flat-square)](https://opensource.org/licenses/MIT)
+[![CI](https://github.com/Neil-Crago/fractal_algebra/tree/master/crates/fractal_algebra/actions/workflows/rust.yml/badge.svg)](https://github.com/Neil-Crago/fractal_algebra/tree/master/crates/fractal_algebra/actions/workflows/rust.yml)
+
+
+
  ## FractalGraph
 
 - A custom data structure designed as a hybrid of a graph, a trie, and a spatial index.
