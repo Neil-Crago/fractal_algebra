@@ -38,9 +38,9 @@ impl FrequencyBeliefSpace {
             },
             // Initialize memory with a "worst-case" scenario
             best_guess: initial_guess,
+           // Initialize memory with the largest possible error.
             best_feedback: FeedbackSignal {
-                correlation_strength: -1.0,
-                phase_alignment_error: f64::MAX,
+                error_distance: f64::MAX
             },
         }
     }
@@ -59,14 +59,14 @@ impl ProbabilisticSearch for FrequencyBeliefSpace {
         }
     }
 
-    // This is the new, smarter update logic
-    // In fa_bayes/src/lib.rs
     fn update(&mut self, feedback: &FeedbackSignal, last_guess: &EntropyPulse) {
-        // Step 1: Update our memory with the best result seen so far.
-        if feedback.correlation_strength > self.best_feedback.correlation_strength {
-            self.best_feedback = feedback.clone();
-            self.best_guess = last_guess.clone();
-        }
+    // The core logic now checks for a SMALLER error.
+    if feedback.error_distance < self.best_feedback.error_distance {
+        // We found a better guess! Update our memory.
+        self.best_feedback = feedback.clone();
+        self.best_guess = last_guess.clone();
+    }
+
 
         // Step 2: Use a more aggressive learning rate to move the belief faster.
         let learning_rate = 0.15; // Increased from 0.1
@@ -75,7 +75,7 @@ impl ProbabilisticSearch for FrequencyBeliefSpace {
 
         // Step 3: Use a more aggressive and consistent reduction in exploration.
         // This forces the AI to "zoom in" and commit to a peak.
-        self.frequency.std_dev *= 0.995; // Shrinks by 0.5% each step
+        self.frequency.std_dev *= 0.9; // Shrinks by 0.5% each step
 
         // Ensure std_dev doesn't become too small.
         if self.frequency.std_dev < 0.01 {

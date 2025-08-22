@@ -65,8 +65,9 @@ pub struct EntropyPulse {
 }
 
 /// The result of a measurement, used as feedback.
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub struct FeedbackSignal {
-    pub correlation_strength: f64, // e.g., -1.0 to 1.0
-    pub phase_alignment_error: f64,
+    /// The absolute distance between the guess's metric and the ideal metric (0.25).
+    /// The AI's goal is to minimize this value.
+    pub error_distance: f64,
 }

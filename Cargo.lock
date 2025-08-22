@@ -296,10 +296,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "fa_group_theory"
-version = "0.1.0"
-
-[[package]]
 name = "fa_slow_ai"
 version = "0.1.0"
 dependencies = [

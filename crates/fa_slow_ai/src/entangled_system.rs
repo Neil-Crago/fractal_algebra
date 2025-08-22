@@ -203,8 +203,7 @@ impl EntangledSystem {
         if self.particles.len() < 2 {
             // Cannot measure if we don't have two particles.
             return FeedbackSignal {
-                correlation_strength: -1.0, // Indicates an error or invalid state
-                phase_alignment_error: std::f64::consts::PI,
+                error_distance: 1.0,
             };
         }
 
@@ -245,11 +244,10 @@ impl EntangledSystem {
         // The correlation can be calculated as the cosine of the angle between the
         // measured state and the expected state. This is the real part of their dot product.
         let correlation = (average_state_b * expected_state_b.conj()).re;
-        let phase_error = (average_state_b.arg() - expected_state_b.arg()).abs();
+        //   let phase_error = (average_state_b.arg() - expected_state_b.arg()).abs();
 
         FeedbackSignal {
-            correlation_strength: correlation as f64,
-            phase_alignment_error: phase_error as f64,
+            error_distance: 1.0 - correlation as f64, // New field to represent error distance
         }
     }
 }

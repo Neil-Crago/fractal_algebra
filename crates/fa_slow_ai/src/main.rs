@@ -14,20 +14,16 @@ use fa_bayes::FrequencyBeliefSpace;
 // Use the simulation engine
 use entangled_system::EntangledSystem;
 
-/// This is the new, real experiment function.
-/// It creates a quantum system, applies the AI's pulse, and measures the result.
-fn run_real_experiment(pulse: &EntropyPulse) -> FeedbackSignal {
-    // 1. Create a fresh, perfectly entangled system for each experiment.
-    //    This ensures each test is independent.
-    let mut system = EntangledSystem::new(10, 10); // A 10x10 grid universe
+fn run_short_experiment(pulse: &EntropyPulse) -> FeedbackSignal {
+    // 1. Create a fresh, entangled system.
+    let mut system = EntangledSystem::new(10, 10);
 
-    // 2. Apply the AI's proposed pulse, which will cause some decoherence.
+    // 2. Apply the pulse.
     system.apply_pulse(pulse);
 
-    // 3. Perform the measurement and return the resulting correlation.
+    // 3. Measure the result and return it directly.
     system.measure_correlation()
 }
-
 
 // The AI's learning loop is implemented in the `main` function below.
 // It sets up the belief space, runs multiple iterations of guessing,
@@ -35,7 +31,7 @@ fn run_real_experiment(pulse: &EntropyPulse) -> FeedbackSignal {
 fn main() {
     println!("\n--- Slow AI Entanglement Recoherence Experiment ---");
 
-    for _k in 1..=25 {
+    for _k in 1..=5 {
         // 1. Setup the Bayesian learning agent.
         //    We'll start with a wide search range for the frequency.
         let mut belief_space = FrequencyBeliefSpace::new(0.0, 1.0); // Start guess at 0 Hz, amplitude 1.0
@@ -51,7 +47,7 @@ fn main() {
             // a. The AI proposes its best guess based on its current beliefs.
             let guess_pulse = belief_space.propose_best_guess();
 
-            // b. We run the *real* physics simulation with this guess.
+            // b. We run the physics simulation with this guess.
             //    To make the simulation work, we need to compare the AI's guess
             //    to our hidden "resonant frequency". A pulse at the resonant frequency
             //    should cause minimal decoherence.
@@ -64,30 +60,30 @@ fn main() {
                 waveform: guess_pulse.waveform.clone(),
             };
 
-            let feedback = run_real_experiment(&effective_pulse);
+            let feedback = run_short_experiment(&effective_pulse);
 
             // c. The AI updates its beliefs based on the feedback from the real experiment.
             belief_space.update(&feedback, &guess_pulse);
         }
 
-        //println!("\n--- Learning Complete ---");
         let final_guess = belief_space.propose_best_guess();
+
         let metric_fract = (final_guess.frequency / (2.0 * std::f64::consts::PI))
             .fract()
             .abs();
-        let mut category = "Saddle Point (Stable Decoherence)"; // Default to saddle point
 
-        // Check if the fractional part is closer to 0.25 than to 0.75
-        // We can check if it's within a certain tolerance of the peak.
-        if (metric_fract - 0.25).abs() < 0.1 {
+        let mut category = "Unknown";
+        let tolerance = 0.05; // How close it needs to be
+
+        if (metric_fract - 0.25).abs() < tolerance {
             category = "Peak (Coherent Resonance)";
+        } else if (metric_fract - 0.75).abs() < tolerance {
+            category = "Saddle Point (Stable Decoherence)";
         }
 
         println!(
-            "guess: {:>.4} rad/s,   \tmetric = {:>.4},  \tcategory = {}",
-            final_guess.frequency,
-            metric_fract, // It's clearer to print the fractional part
-            category
+            "guess: {:.4} rad/s, \tmetric = {:.4}, \tcategory = {}",
+            final_guess.frequency, metric_fract, category
         );
     }
 }
