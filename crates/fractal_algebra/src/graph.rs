@@ -1,5 +1,92 @@
-use factorial_engine::FactorialEngine;
+//! A semantically-typed, directed graph of fractal units.
+//!
+//! # Examples
+//!
+//! ```rust
+//! use fractal_algebra::graph::{FractalGraph, NodeId, EdgeType, GraphError};
+//! use fractal_algebra::atom::FractalAtom;
+//! use fractal_algebra::metadata::Metadata;
+//! use fractal_algebra::tag_set::TagSet;
+//!
+//! // ─── 1. Create a new graph and add two FractalAtom nodes ───────────────────
+//! let mut g: FractalGraph<FractalAtom<i32>> = FractalGraph::new();
+//! let a = g
+//!     .add_node(FractalAtom::new(10, TagSet::default(), Metadata::default()).unwrap())
+//!     .unwrap();
+//! let b = g
+//!     .add_node(FractalAtom::new(20, TagSet::default(), Metadata::default()).unwrap())
+//!     .unwrap();
+//!
+//! assert_eq!(g.node_count(), 2);
+//! assert_eq!(g.edge_count(), 0);
+//!
+//!
+//! // ─── 2. Connect them with an excitatory edge ───────────────────────────────
+//! g.add_edge(a, b, EdgeType::Excitatory).unwrap();
+//! assert_eq!(g.edge_count(), 1);
+//! assert!(g.is_acyclic());  // Still no cycle
+//!
+//!
+//! // ─── 3. Error when referring to a missing node ─────────────────────────────
+//! let missing = NodeId(u64::MAX);
+//! assert_eq!(
+//!     g.add_edge(a, missing, EdgeType::Excitatory),
+//!     Err(GraphError::NodeNotFound(a, missing))
+//! );
+//!
+//!
+//! // ─── 4. Duplicate edges get rejected ──────────────────────────────────────
+//! assert_eq!(
+//!     g.add_edge(a, b, EdgeType::Excitatory),
+//!     Err(GraphError::DuplicateEdge(a, b, EdgeType::Excitatory))
+//! );
+//!
+//!
+//! // ─── 5. Cycle detection flips `is_acyclic` to false ──────────────────────
+//! // (we allow edges in, but `is_acyclic` will notice the loop)
+//! g.add_edge(b, a, EdgeType::Excitatory).unwrap();
+//! assert!(!g.is_acyclic());
+//!
+//!
+//! // ─── 6. Removing a node drops its edges ───────────────────────────────────
+//! g.remove_node(a).unwrap();
+//! assert_eq!(g.node_count(), 1);
+//! assert_eq!(g.edge_count(), 0);
+//! ```
+//!
+//! And here’s a focused example on the *error* path for `add_node` itself:
+//!
+//! ```rust
+//! # use fractal_algebra::graph::{FractalGraph, GraphError};
+//! # use fractal_algebra::atom::FractalAtom;
+//! # use fractal_algebra::metadata::Metadata;
+//! # use fractal_algebra::tag_set::TagSet;
+//! let mut g: FractalGraph<FractalAtom<i32>> = FractalGraph::new();
+//!
+//! // First insertion succeeds
+//! let first = g
+//!     .add_node(FractalAtom::new(42, TagSet::default(), Metadata::default()).unwrap())
+//!     .unwrap();
+//!
+//! // Inserting the *same* semantic payload again triggers DuplicateNode
+//! assert_eq!(
+//!     g.add_node(FractalAtom::new(42, TagSet::default(), Metadata::default()).unwrap()),
+//!     Err(GraphError::DuplicateNode(first))
+//! );
+//! ```
+//!
+//! Finally, a `#[should_panic]` style test for a method that *panics* on misuse:
+//!
+//! ```rust,should_panic
+//! # use fractal_algebra::graph::FractalGraph;
+//! // Calling `remove_node` on a graph with no such node panics.
+//! let mut g: FractalGraph<()> = FractalGraph::new();
+//! g.remove_node(Default::default()).unwrap();  // this node never existed
+//! ```
+
+use thiserror::Error;
 use std::cmp::Ordering;
+use std::fmt::Debug;
 use std::collections::{BinaryHeap, HashMap};
 
 // A more descriptive name for my vecmap structure.
@@ -42,11 +129,45 @@ impl PartialOrd for AStarState {
     }
 }
 
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
+pub struct NodeId(pub u64);
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
+pub enum EdgeType {
+    Excitatory,
+    Inhibitory,
+    Resonant,
+    Feedback,
+    Custom(&'static str), // optional
+}
+
+
+
+#[derive(Debug, Error, PartialEq, Eq)]
+pub enum GraphError {
+    #[error("node not found: {0} → {1}")]
+    NodeNotFound(u64, u64),
+
+    #[error("duplicate edge: {0} → {1} of type {2:?}")]
+    DuplicateEdge(u64, u64, EdgeType),
+
+    #[error("duplicate node: {0}")]
+    DuplicateNode(u64),
+
+    #[error("cycle detected")]
+    CycleDetected,
+
+    #[error("invalid operation: {0}")]
+    Invalid(String),
+}
 /// A custom graph structure to store and analyze the relationships
 /// between factorial factorizations.
 pub struct FractalGraph {
     pub nodes: HashMap<u64, FactorialNode>,
     pub prime_to_n_index: HashMap<u64, Vec<u64>>,
+    pub edges: HashMap<(u64, u64, EdgeType), ()>,
+    next_node_id: u64, // new
 }
 
 impl Default for FractalGraph {
@@ -55,31 +176,97 @@ impl Default for FractalGraph {
     }
 }
 
+
 impl FractalGraph {
+   pub fn assert_invariants(&self) {
+    // Every edge must reference existing nodes
+    for (&(src, dst, _), _) in &self.edges {
+        debug_assert!(
+            self.nodes.contains_key(&src),
+            "Edge source node {} does not exist",
+            src
+        );
+        debug_assert!(
+            self.nodes.contains_key(&dst),
+            "Edge destination node {} does not exist",
+            dst
+        );
+    }
+
+    // Optional: check for duplicate nodes (should be impossible with HashMap)
+    // Optional: check for self-loops or cycles if disallowed
+}
+
+    /// Connect two existing nodes.
+    ///
+    /// # Parameters
+    /// - `from`: source node
+    /// - `to`:   destination node
+    /// - `edge_type`: semantic edge classification
+    ///
+    /// # Errors
+    /// - `GraphError::NodeNotFound` if either `from` or `to` is absent.
+    /// - `GraphError::DuplicateEdge` if the same `(from, to, edge_type)` already exists.
+       pub fn add_edge(
+    &mut self,
+    from: u64,
+    to: u64,
+    edge_type: EdgeType,
+) -> Result<(), GraphError> {
+    if !self.nodes.contains_key(&from) || !self.nodes.contains_key(&to) {
+        return Err(GraphError::NodeNotFound(from, to));
+    }
+
+    let key = (from, to, edge_type);
+    if self.edges.contains_key(&key) {
+        return Err(GraphError::DuplicateEdge(from, to, edge_type));
+    }
+
+    self.edges.insert(key, ());
+    Ok(())
+}
+}
+
+impl FractalGraph {
+    /// Create an empty FractalGraph.
+    ///
+    /// # Postconditions
+    /// - `node_count == 0`
+    /// - `edge_count == 0`
     pub fn new() -> Self {
         FractalGraph {
             nodes: HashMap::new(),
             prime_to_n_index: HashMap::new(),
+            edges: HashMap::new(),
+            next_node_id: 0,
         }
     }
 
-    /// Adds a node for n! to the graph.
-    /// `factorization_engine` is the tool we built yesterday.
-    pub fn add_node(&mut self, n: u64, engine: &mut FactorialEngine) {
-        let factorization_hashmap = engine.get_factorial_factorization(n);
+    /// Add a new node with semantic payload.
+    ///
+    /// # Errors
+    /// Returns `GraphError::DuplicateNode` if the node’s fingerprint already exists.
+    pub fn add_node(&mut self, payload: FactorialNode) -> Result<u64, GraphError> {
+    let node_id = self.next_node_id;
+    self.next_node_id += 1;
 
-        // Convert HashMap to a sorted Vec for a canonical representation.
-        let mut factorization_map: FactorizationMap = factorization_hashmap.into_iter().collect();
-        factorization_map.sort_by_key(|&(p, _)| p);
+    if self.nodes.contains_key(&node_id) {
+        return Err(GraphError::DuplicateNode(node_id));
+    }
 
-        // Update the prime_to_n_index
-        for &(prime, _) in &factorization_map {
+    self.nodes.insert(node_id, payload);
+    Ok(node_id)
+}
+
+    /// Update the prime_to_n_index for a given node.
+    fn update_prime_index(&mut self, n: u64, factorization_map: &FactorizationMap) {
+        for &(prime, _) in factorization_map {
             self.prime_to_n_index.entry(prime).or_default().push(n);
         }
 
         let node = FactorialNode {
             n,
-            factorization: factorization_map,
+            factorization: factorization_map.to_vec(),
             category: 0, // Placeholder category
         };
         self.nodes.insert(n, node);
@@ -164,6 +351,12 @@ impl FractalGraph {
         None
     }
 
+    pub fn ingest_factorizations(&mut self, data: &[(u64, FactorizationMap)]) {
+    for &(n, ref fmap) in data {
+        self.update_prime_index(n, fmap);
+    }
+}
+
     // --- Helper functions for cost and similarity ---
     fn calculate_cost(&self, node1: &FactorialNode, node2: &FactorialNode) -> f64 {
         1.0 - self.calculate_cosine_similarity(&node1.factorization, &node2.factorization)
@@ -203,4 +396,24 @@ impl FractalGraph {
             None => Vec::new(),
         }
     }
+
+    pub fn remove_node(&mut self, node_id: u64) -> Result<(), GraphError> {
+    if !self.nodes.contains_key(&node_id) {
+        return Err(GraphError::NodeNotFound(node_id, node_id));
+    }
+
+    // Remove the node
+    self.nodes.remove(&node_id);
+
+    // Remove all edges involving this node
+    self.edges.retain(|(src, dst, _), _| *src != node_id && *dst != node_id);
+
+    // Remove from prime index
+    for vec in self.prime_to_n_index.values_mut() {
+        vec.retain(|&n| n != node_id);
+    }
+
+    Ok(())
 }
+}
+

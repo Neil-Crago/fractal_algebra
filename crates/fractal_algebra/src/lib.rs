@@ -60,5 +60,7 @@ pub use filters::{FilterTrace, LawFilter, PredicateFilter, ScoreFilter};
 
 pub use atom::FractalAtom;
 
+pub use graph::{EdgeType, GraphError, NodeId};
+
 #[macro_use]
 mod macros;
