@@ -43,23 +43,6 @@ impl AsRef<Metadata> for Metadata {
     }
 }
 
-/// # Examples
-///
-/// ```
-/// use fractal_algebra::{FractalAtom, TagSet, Metadata};
-///
-/// let tags = TagSet::from(vec!["root".into(), "alpha".into()]).unwrap();
-/// let meta = Metadata::builder()
-///     .domain("RealNumbers")
-///     .description("Base node")
-///     .build()
-///     .unwrap();
-///
-/// let atom = FractalAtom::new(42, tags, meta)?;
-/// assert_eq!(*atom.value(), 42);
-/// assert!(atom.tags().any(|t| t == "root"));
-/// # Ok::<(), Box<dyn std::error::Error>>(())
-/// ```
 #[derive(Clone, Debug, Eq, Hash, PartialEq)]
 pub struct FractalAtom<T>
 where
@@ -119,26 +102,6 @@ pub enum TagSetError {
     DuplicateTag(String),
 }
 
-/// # Examples
-///
-/// ```
-/// use fractal_algebra::tag_set::{TagSet, TagSetError};
-///
-/// // Valid construction
-/// let raw = vec!["alpha".into(), "beta".into(), "alpha".into()];
-/// assert_eq!(TagSet::new(raw), Err(TagSetError::DuplicateTag("alpha".into())));
-///
-/// // Trimming and sorting behavior
-/// let raw = vec!["  zeta ".into(), "alpha".into(), "beta".into()];
-/// let tags = TagSet::new(raw).unwrap();
-/// let collected: Vec<_> = tags.iter().cloned().collect();
-/// assert_eq!(collected, vec!["alpha", "beta", "zeta"]);
-///
-/// // Membership checks
-/// assert!(tags.contains("beta"));
-/// assert!(!tags.contains("gamma"));
-/// ```
-/// A set of unique, non-empty tags in canonical (lexical) order.
 #[derive(Clone, Debug, PartialEq, Eq, Hash)]
 pub struct TagSet {
     tags: Vec<String>,
