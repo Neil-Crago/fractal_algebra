@@ -7,5 +7,5 @@ license = "MIT OR Apache-2.0"
 description = "An example program that performs arithmetic operations on a variety of fractal types"
 
 [dependencies]
-tma_engine = "0.1.4"
+tma_engine = "0.1.3"
 fractal_algebra = "0.2.2"
