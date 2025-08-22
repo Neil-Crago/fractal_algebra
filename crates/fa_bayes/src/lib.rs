@@ -1,6 +1,5 @@
 use fa_core::state::{EntropyPulse, FeedbackSignal};
 use fa_core::traits::ProbabilisticSearch;
-use rand::thread_rng;
 use rand_distr::{Distribution, Normal};
 
 // A simple Gaussian distribution to model our belief about a parameter.
@@ -52,7 +51,7 @@ impl ProbabilisticSearch for FrequencyBeliefSpace {
     fn propose_best_guess(&self) -> EntropyPulse {
         let freq_dist = Normal::new(self.frequency.mean, self.frequency.std_dev).unwrap();
         let amp_dist = Normal::new(self.amplitude.mean, self.amplitude.std_dev).unwrap();
-        let mut rng = thread_rng();
+        let mut rng = rand::rng();
         EntropyPulse {
             frequency: freq_dist.sample(&mut rng),
             amplitude: amp_dist.sample(&mut rng),

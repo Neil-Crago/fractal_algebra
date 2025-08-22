@@ -2,6 +2,12 @@
 name = "fa_slow_ai"
 version = "0.1.0"
 edition = "2024"
+authors = ["Neil Crago"]
+license = "MIT"
+repository = "https://github.com/NeilCrago/fractal_algebra/tree/master/crates/fa_slow_ai"
+documentation = "https://docs.rs/fa_slow_ai"
+keywords = ["AI", "fractal", "Bayesian"]
+description = "A slow AI implementation using fractal algebra."
 
 [dependencies]
 fractal_algebra = { path = "../fractal_algebra" }

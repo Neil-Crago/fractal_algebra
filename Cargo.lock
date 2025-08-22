@@ -6,8 +6,8 @@ version = 4
 name = "a_star"
 version = "0.1.0"
 dependencies = [
- "factorial_engine 0.1.1",
- "fractal_algebra 0.1.7",
+ "factorial_engine 0.1.3 (registry+https://github.com/rust-lang/crates.io-index)",
+ "fractal_algebra 0.1.9",
 ]
 
 [[package]]
@@ -112,9 +112,9 @@ checksum = "bef38d45163c2f1dde094a7dfd33ccf595c92905c8f8f4fdc18d06fb1037718a"
 
 [[package]]
 name = "bitflags"
-version = "2.9.2"
+version = "2.9.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "6a65b545ab31d687cff52899d4890855fec459eb6afe0da6417b8a18da87aa29"
+checksum = "34efbcccd345379ca2868b2b2c9d3782e9cc58ba87bc7d79d5b53d9c9ae6f25d"
 
 [[package]]
 name = "bitstream-io"
@@ -148,9 +148,9 @@ checksum = "8f1fe948ff07f4bd06c30984e69f5b4899c516a3ef74f34df92a2df2ab535495"
 
 [[package]]
 name = "cc"
-version = "1.2.33"
+version = "1.2.34"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "3ee0f8803222ba5a7e2777dd72ca451868909b1ac410621b676adf07280e9b5f"
+checksum = "42bc4aea80032b7bf409b0bc7ccad88853858911b7713a8062fdc0623867bedc"
 dependencies = [
  "jobserver",
  "libc",
@@ -169,9 +169,9 @@ dependencies = [
 
 [[package]]
 name = "cfg-if"
-version = "1.0.1"
+version = "1.0.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "9555578bc9e57714c812a1f84e4fc5b4d21fcb063490c624de019f7464c91268"
+checksum = "2fd1289c04a9ea8cb22300a459a72a385d7c73d3259e2ed7dcb2af674838cfa9"
 
 [[package]]
 name = "chrono"
@@ -299,7 +299,7 @@ dependencies = [
 name = "fa_core"
 version = "0.1.0"
 dependencies = [
- "fractal_algebra 0.2.1",
+ "fractal_algebra 0.2.2",
  "num-complex",
 ]
 
@@ -313,25 +313,25 @@ version = "0.1.0"
 dependencies = [
  "fa_bayes",
  "fa_core",
- "fractal_algebra 0.2.1",
+ "fractal_algebra 0.2.2",
 ]
-
-[[package]]
-name = "factorial_engine"
-version = "0.1.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e81b90aef7e2fb64e4ea9547357e85ee2e0c6601a6bdc906bd7ea9c106376a47"
 
 [[package]]
 name = "factorial_engine"
 version = "0.1.3"
 
 [[package]]
+name = "factorial_engine"
+version = "0.1.3"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "21f79674285f4e24fc54e7978ca9aa0d95202d6d63fb484d91f5a3b08bbbeedf"
+
+[[package]]
 name = "fast_fac"
 version = "0.1.0"
 dependencies = [
- "factorial_engine 0.1.1",
- "fractal_algebra 0.1.7",
+ "factorial_engine 0.1.3 (registry+https://github.com/rust-lang/crates.io-index)",
+ "fractal_algebra 0.2.1",
 ]
 
 [[package]]
@@ -355,11 +355,11 @@ dependencies = [
 
 [[package]]
 name = "fractal_algebra"
-version = "0.1.7"
+version = "0.1.9"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "cb4b5fab55f11438474e0b2e5481c69bbd6411b113096a495059338cd952d3c3"
+checksum = "c401bbfc46547f60e2579e58aa64f07bb2287250aaf1c22112ffa1cfe89fd9a6"
 dependencies = [
- "factorial_engine 0.1.1",
+ "factorial_engine 0.1.3 (registry+https://github.com/rust-lang/crates.io-index)",
  "num-complex",
  "rand 0.9.2",
 ]
@@ -367,8 +367,20 @@ dependencies = [
 [[package]]
 name = "fractal_algebra"
 version = "0.2.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "4574d6650e1980bf31922ec92a8eb193e8850a11abf3834ddd5d9c625a8a694b"
 dependencies = [
- "factorial_engine 0.1.1",
+ "factorial_engine 0.1.3 (registry+https://github.com/rust-lang/crates.io-index)",
+ "num-complex",
+ "rand 0.9.2",
+ "thiserror 2.0.16",
+]
+
+[[package]]
+name = "fractal_algebra"
+version = "0.2.2"
+dependencies = [
+ "factorial_engine 0.1.3 (registry+https://github.com/rust-lang/crates.io-index)",
  "num-complex",
  "rand 0.9.2",
  "thiserror 2.0.16",
@@ -595,8 +607,8 @@ dependencies = [
 name = "mandelbrot"
 version = "0.1.0"
 dependencies = [
- "fractal_algebra 0.1.7",
- "tma_engine 0.1.2",
+ "fractal_algebra 0.1.9",
+ "tma_engine 0.1.3 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]
@@ -755,9 +767,9 @@ dependencies = [
 
 [[package]]
 name = "proc-macro2"
-version = "1.0.97"
+version = "1.0.101"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d61789d7719defeb74ea5fe81f2fdfdbd28a803847077cecce2ff14e1472f6f1"
+checksum = "89ae43fd86e4158d6db51ad8e2b80f313af9cc74f5c0e03ccb87de09998732de"
 dependencies = [
  "unicode-ident",
 ]
@@ -1002,8 +1014,8 @@ name = "sierpinski"
 version = "0.1.0"
 dependencies = [
  "chrono",
- "fractal_algebra 0.1.7",
- "tma_engine 0.1.2",
+ "fractal_algebra 0.1.9",
+ "tma_engine 0.1.3 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]
@@ -1110,9 +1122,7 @@ dependencies = [
 
 [[package]]
 name = "tma_engine"
-version = "0.1.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "849369729031bd69b44f8b1fd86952f5f85571fb39b8c288b6f261b5369bbd13"
+version = "0.1.3"
 dependencies = [
  "image",
  "rand 0.8.5",
@@ -1121,6 +1131,8 @@ dependencies = [
 [[package]]
 name = "tma_engine"
 version = "0.1.3"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "0712794c8fd0cec183aab8363c9c9ae4d48cba8d363976ade2550d5afd2944b3"
 dependencies = [
  "image",
  "rand 0.8.5",
@@ -1323,9 +1335,9 @@ dependencies = [
 
 [[package]]
 name = "winnow"
-version = "0.7.12"
+version = "0.7.13"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f3edebf492c8125044983378ecb5766203ad3b4c2f7a922bd7dd207f6d443e95"
+checksum = "21a0236b59786fed61e2a80582dd500fe61f18b5dca67a4a067d0bc9039339cf"
 dependencies = [
  "memchr",
 ]
@@ -1336,7 +1348,7 @@ version = "0.39.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "6f42320e61fe2cfd34354ecb597f86f413484a798ba44a8ca1165c58d42da6c1"
 dependencies = [
- "bitflags 2.9.2",
+ "bitflags 2.9.3",
 ]
 
 [[package]]

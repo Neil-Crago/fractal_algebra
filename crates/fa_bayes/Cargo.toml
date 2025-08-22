@@ -2,6 +2,13 @@
 name = "fa_bayes"
 version = "0.1.0"
 edition = "2024"
+authors = ["Neil Crago"]
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/NeilCrago/fractal_algebra/tree/master/crates/fa_bayes"
+documentation = "https://docs.rs/fa_bayes"
+description = "A library for Bayesian inference using fractal algebra."
+keywords = ["Bayesian", "inference", "fractal", "algebra"]
+
 
 [dependencies]
 rand_distr = { workspace = true }

@@ -1,7 +1,5 @@
-// In fa_slow_ai/src/main.rs
-
 // Use the library components from this crate
-use fa_core::state::{EntangledSystem, EntropyPulse, FeedbackSignal};
+use fa_core::state::{EntropyPulse, FeedbackSignal};
 use fa_core::traits::ProbabilisticSearch;
 
 // Use the concrete implementation from your other crate
