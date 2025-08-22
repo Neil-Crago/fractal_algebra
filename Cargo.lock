@@ -316,7 +316,7 @@ checksum = "21f79674285f4e24fc54e7978ca9aa0d95202d6d63fb484d91f5a3b08bbbeedf"
 
 [[package]]
 name = "factorial_engine"
-version = "0.1.4"
+version = "0.1.5"
 
 [[package]]
 name = "fast_fac"
@@ -1113,7 +1113,7 @@ dependencies = [
 
 [[package]]
 name = "tma_engine"
-version = "0.1.4"
+version = "0.1.5"
 dependencies = [
  "image",
  "rand 0.8.5",
