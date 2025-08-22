@@ -224,4 +224,9 @@ impl<T: Debug + PartialEq> FractalGraph<T> {
         recursion_stack.insert(node_id, false);
         false
     }
+
+    /// Returns an iterator that allows modifying each edge in the graph.
+    pub fn all_edges_mut(&mut self) -> impl Iterator<Item = &mut FractalGraphEdge> {
+        self.edges.values_mut().flatten()
+    }
 }

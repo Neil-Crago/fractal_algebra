@@ -60,27 +60,26 @@ impl ProbabilisticSearch for FrequencyBeliefSpace {
     }
 
     // This is the new, smarter update logic
+    // In fa_bayes/src/lib.rs
     fn update(&mut self, feedback: &FeedbackSignal, last_guess: &EntropyPulse) {
-        // Step 1: Check if the new guess is better than our best-remembered guess.
+        // Step 1: Update our memory with the best result seen so far.
         if feedback.correlation_strength > self.best_feedback.correlation_strength {
-            // If it is, update our memory.
-            self.best_feedback = feedback.clone(); // You may need to derive(Clone) on FeedbackSignal
-            self.best_guess = last_guess.clone(); // You may need to derive(Clone) on EntropyPulse
+            self.best_feedback = feedback.clone();
+            self.best_guess = last_guess.clone();
         }
 
-        // Step 2: Always nudge the mean towards the best-known position.
-        let learning_rate = 0.1;
-        let error = self.best_guess.frequency - self.frequency.mean;
-        self.frequency.mean += learning_rate * error;
+        // Step 2: Use a more aggressive learning rate to move the belief faster.
+        let learning_rate = 0.15; // Increased from 0.1
+        self.frequency.mean =
+            (1.0 - learning_rate) * self.frequency.mean + learning_rate * self.best_guess.frequency;
 
-        // Step 3: Gradually reduce uncertainty (exploitation) as we find better solutions.
-        // Shrink std_dev faster if correlation is high.
-        //self.frequency.std_dev *= 1.0 - (learning_rate * self.best_feedback.correlation_strength * 0.1);
-        self.frequency.std_dev *=
-            1.0 - (learning_rate * self.best_feedback.correlation_strength * 0.5); // Use 0.5
-        // Ensure std_dev doesn't become too small, to prevent getting stuck.
-        if self.frequency.std_dev < 1.0 {
-            self.frequency.std_dev = 1.0;
+        // Step 3: Use a more aggressive and consistent reduction in exploration.
+        // This forces the AI to "zoom in" and commit to a peak.
+        self.frequency.std_dev *= 0.995; // Shrinks by 0.5% each step
+
+        // Ensure std_dev doesn't become too small.
+        if self.frequency.std_dev < 0.01 {
+            self.frequency.std_dev = 0.01;
         }
     }
 }

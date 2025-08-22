@@ -18,8 +18,16 @@ fn main() {
         metadata: Default::default(),
         tags: Default::default(),
     };
-    let ifs1 = IFS { transform_count: 4, metadata: Default::default(), tags: Default::default() };
-    let ifs2 = IFS { transform_count: 3, metadata: Default::default(), tags: Default::default() };
+    let ifs1 = IFS {
+        transform_count: 4,
+        metadata: Default::default(),
+        tags: Default::default(),
+    };
+    let ifs2 = IFS {
+        transform_count: 3,
+        metadata: Default::default(),
+        tags: Default::default(),
+    };
 
     println!("--- Idiomatic Subtraction: A + (-B) ---");
     let subtraction_result = m1.clone().sub(&m2.clone());

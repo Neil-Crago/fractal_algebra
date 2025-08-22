@@ -108,39 +108,37 @@ pub struct TagSet {
 }
 
 impl TagSet {
-
     pub fn new<I: IntoIterator<Item = impl Into<String>>>(
-    raw_tags: I,
-) -> Result<Self, TagSetError> {
-    let mut seen = HashSet::new();
-    let mut tags = Vec::new();
+        raw_tags: I,
+    ) -> Result<Self, TagSetError> {
+        let mut seen = HashSet::new();
+        let mut tags = Vec::new();
 
-    for raw in raw_tags {
-        let tag = raw.into().trim().to_string();
+        for raw in raw_tags {
+            let tag = raw.into().trim().to_string();
 
-        if tag.is_empty() {
-            return Err(TagSetError::EmptyTag(tag));
+            if tag.is_empty() {
+                return Err(TagSetError::EmptyTag(tag));
+            }
+
+            if !seen.insert(tag.clone()) {
+                return Err(TagSetError::DuplicateTag(tag));
+            }
+
+            tags.push(tag);
         }
 
-        if !seen.insert(tag.clone()) {
-            return Err(TagSetError::DuplicateTag(tag));
+        // THIS IS THE FIX:
+        // If the loop finished and we still have no tags,
+        // it means the input collection was empty.
+        if tags.is_empty() {
+            return Err(TagSetError::EmptyCollection);
         }
 
-        tags.push(tag);
+        tags.sort(); // Optional: for deterministic ordering
+
+        Ok(Self { tags })
     }
-
-    // THIS IS THE FIX:
-    // If the loop finished and we still have no tags,
-    // it means the input collection was empty.
-    if tags.is_empty() {
-        return Err(TagSetError::EmptyCollection);
-    }
-
-    tags.sort(); // Optional: for deterministic ordering
-
-    Ok(Self { tags })
-}
-
 
     /// Returns true if there are no tags.
     pub fn is_empty(&self) -> bool {

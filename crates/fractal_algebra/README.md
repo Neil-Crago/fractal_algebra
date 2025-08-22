@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="docs/assets/logo.png" alt="Fractal Algebra logo" width="400" />
+  <img src="./docs/assets/logo.png" alt="Fractal Algebra logo" width="400" />
 </p>    
 </div>
 
