@@ -291,7 +291,7 @@ dependencies = [
 name = "fa_core"
 version = "0.1.0"
 dependencies = [
- "fractal_algebra 0.2.3",
+ "fractal_algebra 0.2.4",
  "num-complex",
 ]
 
@@ -305,7 +305,7 @@ version = "0.1.0"
 dependencies = [
  "fa_bayes",
  "fa_core",
- "fractal_algebra 0.2.3",
+ "fractal_algebra 0.2.4",
 ]
 
 [[package]]
@@ -359,7 +359,7 @@ dependencies = [
 
 [[package]]
 name = "fractal_algebra"
-version = "0.2.3"
+version = "0.2.4"
 dependencies = [
  "factorial_engine 0.1.3",
  "num-complex",
