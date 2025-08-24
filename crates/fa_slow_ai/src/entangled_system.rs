@@ -1,7 +1,7 @@
 //! This module defines the core simulation environment, the `EntangledSystem`.
 //! It contains the graph representing spacetime and the particles within it.
 
-use fa_core::state::{EntropyPulse, FeedbackSignal}; // Import EntropyPulse and FeedbackSignal
+use fractal_algebra::ai::{EntropyPulse, FeedbackSignal}; // Import EntropyPulse and FeedbackSignal
 use fractal_algebra::graph::{EdgeType, FractalGraph, NodeId};
 use num_complex::Complex;
 use rand::Rng;

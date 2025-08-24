@@ -1,5 +1,4 @@
-use fa_core::state::{EntropyPulse, FeedbackSignal};
-use fa_core::traits::ProbabilisticSearch;
+use fractal_algebra::ai::{EntropyPulse, FeedbackSignal, ProbabilisticSearch};
 use rand_distr::{Distribution, Normal};
 
 // A simple Gaussian distribution to model our belief about a parameter.

@@ -300,7 +300,6 @@ name = "fa_slow_ai"
 version = "0.1.0"
 dependencies = [
  "fa_bayes",
- "fa_core",
  "fractal_algebra 0.2.7",
  "num-complex",
  "rand 0.9.2",

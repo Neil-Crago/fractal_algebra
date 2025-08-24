@@ -13,4 +13,4 @@ keywords = ["Bayesian", "inference", "fractal", "algebra"]
 [dependencies]
 rand_distr = { workspace = true }
 rand = { workspace = true }
-fa_core = { workspace = true }
+fractal_algebra = { path = "../fractal_algebra" }

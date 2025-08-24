@@ -11,7 +11,6 @@ description = "A slow AI implementation using fractal algebra."
 
 [dependencies]
 fractal_algebra = { path = "../fractal_algebra" }
-fa_core = { path = "../fa_core" }
 fa_bayes = { path = "../fa_bayes" }
 num-complex = "0.4.6"
 rand = { workspace = true }

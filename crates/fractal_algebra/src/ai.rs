@@ -1,4 +1,4 @@
-use fractal_algebra::{FractalGraph, NodeId};
+use crate::graph::{FractalGraph, NodeId};
 use num_complex::Complex;
 
 /// The main container for our quantum experiment.
@@ -71,3 +71,17 @@ pub struct FeedbackSignal {
     /// The AI's goal is to minimize this value.
     pub correlation_strength: f64
 }
+
+
+/// Defines the behavior of our Bayesian learning engine.
+pub trait ProbabilisticSearch {
+    fn propose_best_guess(&self) -> EntropyPulse;
+    // Add the last_guess parameter here
+    fn update(&mut self, feedback: &FeedbackSignal, last_guess: &EntropyPulse); // <-- Now 3 parameters
+}
+/// Defines the behavior of our symmetry constraint engine.
+pub trait SymmetryConstraint {
+    /// Check if a proposed pulse would violate the required symmetry.
+    fn is_valid(&self, pulse: &EntropyPulse) -> bool;
+}
+

@@ -20,6 +20,7 @@ pub mod tests;
 pub mod time;
 pub mod traits;
 pub mod vec3;
+pub mod ai;
 
 pub use constants::MODULUS;
 pub use criticloop::GeneratorCriticLoop;
@@ -61,6 +62,8 @@ pub use filters::{FilterTrace, LawFilter, PredicateFilter, ScoreFilter};
 pub use atom::FractalAtom;
 
 pub use graph::{EdgeType, GraphError, NodeId};
+
+pub use ai::{EntangledSystem, EntropyPulse, FeedbackSignal, ParticleResonance};
 
 #[macro_use]
 mod macros;
