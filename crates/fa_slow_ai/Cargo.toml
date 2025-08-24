@@ -10,7 +10,7 @@ keywords = ["AI", "fractal", "Bayesian"]
 description = "A slow AI implementation using fractal algebra."
 
 [dependencies]
-fractal_algebra = { path = "../fractal_algebra" }
+fractal_algebra = { path = "../fractal_algebra", version = "0.2.7" }
 fa_bayes = { path = "../fa_bayes", version = "0.1.0"}
 num-complex = "0.4.6"
 rand = { workspace = true }
