@@ -2,7 +2,6 @@
 /crates/fractal_algebra/target
 /crates/tma_engine/target
 /crates/factorial_engine/target
-/crates/fa_bayes/target
 /crates/fa_slow_ai/target
 /examples/sierpinski/target
 /examples/fast_fac/target

@@ -1,4 +1,4 @@
-use fractal_algebra::ai::{EntropyPulse, FeedbackSignal, ProbabilisticSearch};
+use crate::ai::{EntropyPulse, FeedbackSignal, ProbabilisticSearch};
 use rand_distr::{Distribution, Normal};
 
 // A simple Gaussian distribution to model our belief about a parameter.
@@ -8,7 +8,6 @@ pub struct Gaussian {
 }
 
 // This struct holds the AI's entire belief system about the target pulse.
-// In fa_bayes/src/lib.rs
 
 pub struct FrequencyBeliefSpace {
     pub frequency: Gaussian,

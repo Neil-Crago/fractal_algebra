@@ -21,6 +21,7 @@ pub mod time;
 pub mod traits;
 pub mod vec3;
 pub mod ai;
+pub mod bayes;
 
 pub use constants::MODULUS;
 pub use criticloop::GeneratorCriticLoop;
@@ -63,7 +64,8 @@ pub use atom::FractalAtom;
 
 pub use graph::{EdgeType, GraphError, NodeId};
 
-pub use ai::{EntangledSystem, EntropyPulse, FeedbackSignal, ParticleResonance};
+pub use ai::{EntangledSystem, EntropyPulse, FeedbackSignal, ParticleResonance, ProbabilisticSearch};
+pub use bayes::{FrequencyBeliefSpace, Gaussian};
 
 #[macro_use]
 mod macros;
