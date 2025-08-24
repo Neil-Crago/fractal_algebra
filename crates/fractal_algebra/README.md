@@ -1,8 +1,7 @@
 <p align="center">
-  <img src="docs/assets/logo.png" alt="Fractal Algebra logo" width="400" />
+  <img src="crates/fractal_algebra/docs/assets/logo.png" alt="Fractal Algebra logo" width="400" />
 </p>    
 </div>
-
 
 # Fractal Algebra
 

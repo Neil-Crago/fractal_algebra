@@ -303,7 +303,7 @@ name = "fast_fac"
 version = "0.1.0"
 dependencies = [
  "factorial_engine 0.1.3",
- "fractal_algebra 0.2.2",
+ "fractal_algebra 0.2.7",
 ]
 
 [[package]]
@@ -327,9 +327,9 @@ dependencies = [
 
 [[package]]
 name = "fractal_algebra"
-version = "0.2.2"
+version = "0.2.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "2bcbc3437b3987934be425e7bb1d747a45db06d69c53d927c17c1ab58ff5bd8b"
+checksum = "16f1199f46dd13492ebb2c63204df733760d5f83955ebdbfdcd0bf71f1d46ace"
 dependencies = [
  "factorial_engine 0.1.3",
  "num-complex",
@@ -339,7 +339,7 @@ dependencies = [
 
 [[package]]
 name = "fractal_algebra"
-version = "0.2.7"
+version = "0.2.8"
 dependencies = [
  "factorial_engine 0.1.3",
  "num-complex",
@@ -569,7 +569,7 @@ dependencies = [
 name = "mandelbrot"
 version = "0.1.1"
 dependencies = [
- "fractal_algebra 0.2.2",
+ "fractal_algebra 0.2.7",
  "tma_engine 0.1.3",
 ]
 
@@ -999,7 +999,7 @@ name = "sierpinski"
 version = "0.1.0"
 dependencies = [
  "chrono",
- "fractal_algebra 0.2.2",
+ "fractal_algebra 0.2.7",
  "tma_engine 0.1.3",
 ]
 

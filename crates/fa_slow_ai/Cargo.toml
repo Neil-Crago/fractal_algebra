@@ -12,5 +12,5 @@ description = "A slow AI implementation using fractal algebra."
 [dependencies]
 fractal_algebra = "0.2.7"
 num-complex = "0.4.6"
-rand = { workspace = true }
 rustfft = "6.4.0"
+rand = "0.9.2"
