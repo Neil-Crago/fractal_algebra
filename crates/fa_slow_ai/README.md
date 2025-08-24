@@ -67,3 +67,12 @@ The program will print the results of each of the five phases to the console.
 * Finally, you will see the "before" and "after" state of the graph, showing a hotspot being created at the center and then the graph's connections being physically altered by that hotspot's energy.
 
 This project serves as a conceptual pathfinder, using a "rough model" to explore profound ideas about the nature of physics, memory, and information. Enjoy the simulation!
+
+## Related Crates
+This crate is part of a collection of crates by the same author:
+These include:-
+  * MOMA
+  * MOMA_simulation_engine
+  * tma_engine
+  * factorial_engine
+  * fractal_algebra

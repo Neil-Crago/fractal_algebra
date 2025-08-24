@@ -22,7 +22,7 @@ A lightweight and ergonomic Rust crate for defining, composing, and applying 2D 
 Add this crate to your `Cargo.toml`:
 ```toml
 [dependencies]
-tma_engine = "0.1.0" # Or the latest version
+tma_engine = "0.1.6" # Or the latest version
 ```
 
 ## Example
@@ -52,3 +52,15 @@ fn main() {
 
 ## Purpose
 This crate is a foundational component of the FractalAlgebra workspace. It provides the geometric building blocks for generating and exploring fractals and other systems based on affine transformations
+
+## Author
+Neil Crago — experimental mathematician
+
+## Related Crates
+This crate is part of a collection of crates by the same author:
+These include:-
+  * MOMA
+  * MOMA_simulation_engine
+  * fractal_algebra
+  * factorial_engine
+  * fa_slow_ai

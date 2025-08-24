@@ -109,4 +109,12 @@ This project is open-source and designed for philosophical and mathematical expl
 ## A Final Note
 
 > “This is not just a framework. It is a way of thinking.”
-`
+
+## Related Crates
+This crate is part of a collection of crates by the same author:
+These include:-
+  * MOMA
+  * MOMA_simulation_engine
+  * tma_engine
+  * factorial_engine
+  * fa_slow_ai

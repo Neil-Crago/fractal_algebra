@@ -22,7 +22,7 @@ This engine is designed as a robust, backend computational tool. It uses **Legen
 Add this crate to your `Cargo.toml`:
 ```toml
 [dependencies]
-factorial_engine = "0.1.0" # Or the latest version
+factorial_engine = "0.1.6" # Or the latest version
 ```
 
 ## Example
@@ -47,3 +47,15 @@ fn main() {
 
 ## Purpose
 This crate serves as a foundational block for applications in number theory, combinatorics, and computational mathematics. It is designed to be a reliable, "black-box" dependency that provides factorial factorization data with maximum efficiency and correctness.
+
+## Author
+Neil Crago — experimental mathematician
+
+## Related Crates
+This crate is part of a collection of crates by the same author:
+These include:-
+  * MOMA
+  * MOMA_simulation_engine
+  * Fractal_Algebra
+  * tma_engine
+  * fa_slow_ai
