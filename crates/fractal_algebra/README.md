@@ -3,6 +3,7 @@
 </p>    
 </div>
 
+
 # Fractal Algebra
 
 This is the primary research and application crate where the computational and geometric engines are brought together. It focuses on discovering and analyzing the emergent structures from number-theoretic data.

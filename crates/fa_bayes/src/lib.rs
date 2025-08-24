@@ -40,7 +40,7 @@ impl FrequencyBeliefSpace {
             best_guess: initial_guess,
            // Initialize memory with the largest possible error.
             best_feedback: FeedbackSignal {
-                error_distance: f64::MAX
+                correlation_strength: f64::MAX
             },
         }
     }
@@ -61,7 +61,7 @@ impl ProbabilisticSearch for FrequencyBeliefSpace {
 
     fn update(&mut self, feedback: &FeedbackSignal, last_guess: &EntropyPulse) {
     // The core logic now checks for a SMALLER error.
-    if feedback.error_distance < self.best_feedback.error_distance {
+    if feedback.correlation_strength < self.best_feedback.correlation_strength {
         // We found a better guess! Update our memory.
         self.best_feedback = feedback.clone();
         self.best_guess = last_guess.clone();

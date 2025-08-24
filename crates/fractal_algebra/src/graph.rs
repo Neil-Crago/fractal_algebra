@@ -51,6 +51,7 @@ pub enum EdgeType {
 
 /// A directed graph using an adjacency list for its structure.
 /// The generic type `T` represents the data stored in each node's payload.
+#[derive(Debug)]
 pub struct FractalGraph<T> {
     nodes: HashMap<NodeId, Node<T>>,
     /// Adjacency list: maps a source NodeId to a list of its outgoing edges.

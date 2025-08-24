@@ -15,3 +15,4 @@ fa_core = { path = "../fa_core" }
 fa_bayes = { path = "../fa_bayes" }
 num-complex = "0.4.6"
 rand = { workspace = true }
+rustfft = "6.4.0"

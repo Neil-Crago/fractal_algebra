@@ -6,8 +6,22 @@ use fractal_algebra::graph::{EdgeType, FractalGraph, NodeId};
 use num_complex::Complex;
 use rand::Rng;
 use std::collections::HashMap;
+use std::collections::VecDeque;
 
 // --- Data Structures ---
+
+/// Represents a single, controllable wave source in the simulation.
+pub struct PulseSource {
+    /// The graph node index where the pulse originates.
+    pub location_node_index: usize,
+
+    /// The strength of the wave from this source (amplitude).
+    pub amplitude: f64,
+
+    /// The initial phase offset in radians.
+    /// Controlling this allows us to create precise interference patterns.
+    pub phase_offset: f64,
+}
 
 /// Represents a particle as a stable, resonant pattern in the graph.
 #[allow(dead_code)]
@@ -19,22 +33,34 @@ pub struct ParticleResonance {
     /// The state itself is stored as the complex weight on these edges.
     pub state_edges: Vec<NodeId>,
 }
-
-/// The main container for our quantum experiment.
 #[allow(dead_code)]
+impl ParticleResonance {
+    /// Creates a new ParticleResonance with default values.
+    pub fn new() -> Self {
+        Self {
+            core_node: NodeId(0),
+            state_edges: Vec::new(),
+        }
+    }
+}
+
+#[allow(dead_code)]
+#[derive(Debug)]
 pub struct EntangledSystem {
     pub graph: FractalGraph<()>, // Node payload is empty for now
     pub particles: Vec<ParticleResonance>,
-    // We can store grid dimensions for easy reference
-    grid_width: u64,
-    grid_height: u64,
+    pub grid_width: u64,
+    pub grid_height: u64,
+    pub adjacency_list: Vec<Vec<usize>>,
+    pub particle_states: Vec<f64>,
 }
 
 // --- Implementation ---
 #[allow(dead_code)]
 impl EntangledSystem {
     /// Creates a new simulation environment with two entangled particles.
-    pub fn new(width: u64, height: u64) -> Self {
+    pub fn new(width: u64, height: u64, adjacency_list: Vec<Vec<usize>>) -> Self {
+        let num_nodes = adjacency_list.len();
         let mut graph = FractalGraph::new();
         let mut node_map = HashMap::new(); // Helper to find NodeIds from (x, y) coords
 
@@ -98,6 +124,8 @@ impl EntangledSystem {
             particles: Vec::new(),
             grid_width: width,
             grid_height: height,
+            adjacency_list: adjacency_list,
+            particle_states: vec![0.0; num_nodes],
         };
 
         // 3. Create two particles at different locations.
@@ -121,6 +149,127 @@ impl EntangledSystem {
         }
 
         system
+    }
+
+    // In your EntangledSystem's `impl` block
+
+    /// Modifies the graph's topology based on the energy in particle_states.
+    /// This simulates "curvature".
+    /// Modifies the graph's topology based on the energy in particle_states.
+    // Replace your existing update_curvature function with this refined version.
+    pub fn update_curvature(&mut self, threshold: f64, max_distance: u32) {
+        let active_nodes: Vec<usize> = self
+            .particle_states
+            .iter()
+            .enumerate()
+            .filter(|&(_, &state)| state > threshold)
+            .map(|(index, _)| index)
+            .collect();
+
+        if active_nodes.is_empty() {
+            println!(
+                "[CURVATURE] No nodes exceeded the energy threshold of {}.",
+                threshold
+            );
+            return;
+        }
+
+        let mut new_connections = Vec::new();
+
+        // For each highly active node...
+        for &active_node in &active_nodes {
+            // ...find all nodes within its attraction range.
+            let distances = self.bfs_distances(active_node);
+
+            for (nearby_node, dist_option) in distances.iter().enumerate() {
+                if let Some(dist) = *dist_option {
+                    // The condition for attraction:
+                    // 1. The node is within max_distance.
+                    // 2. It is NOT a direct neighbor (distance > 1).
+                    // 3. It is NOT the node itself (distance > 0).
+                    if dist > 1 && dist <= max_distance {
+                        println!(
+                            "[CURVATURE] Active Node {} is attracting nearby Node {} (Distance: {})",
+                            active_node, nearby_node, dist
+                        );
+                        // To avoid duplicates, we'll add the connection from smaller index to larger
+                        new_connections
+                            .push((active_node.min(nearby_node), active_node.max(nearby_node)));
+                    }
+                }
+            }
+        }
+
+        // Remove duplicate connection pairs before adding them
+        new_connections.sort();
+        new_connections.dedup();
+
+        // Add the new connections to the graph's adjacency list.
+        for (node_a, node_b) in new_connections {
+            self.adjacency_list[node_a].push(node_b);
+            self.adjacency_list[node_b].push(node_a);
+            println!(
+                "[CURVATURE] New path created between Node {} and Node {}.",
+                node_a, node_b
+            );
+        }
+    }
+
+    /// Applies the combined interference pattern from multiple pulse sources.
+    pub fn apply_pulses(&mut self, sources: &[PulseSource]) {
+        const WAVE_NUMBER: f64 = 1.0;
+        let distance_maps: Vec<Vec<Option<u32>>> = sources
+            .iter()
+            .map(|s| self.bfs_distances(s.location_node_index))
+            .collect();
+
+        for node_index in 0..self.particle_states.len() {
+            let mut total_effect = 0.0;
+            for (source, distances) in sources.iter().zip(&distance_maps) {
+                if let Some(Some(dist)) = distances.get(node_index) {
+                    let distance = *dist as f64;
+                    let phase = source.phase_offset - distance * WAVE_NUMBER;
+                    let effect = source.amplitude * phase.cos();
+                    total_effect += effect;
+                }
+            }
+            self.particle_states[node_index] += total_effect;
+        }
+    }
+
+    /// Calculates the shortest path distances from a start node to all other nodes in a graph.
+    ///
+    /// # Arguments
+    /// * `start_node` - The index of the node to start the search from.
+    /// * `adjacency_list` - A reference to the graph's structure.
+    ///
+    /// # Returns
+    /// A vector where each index corresponds to a node and the value is the
+    /// distance from the start_node. `None` if the node is unreachable.
+    /// Calculates shortest path distances from a start node (BFS).
+    /// Calculates shortest path distances from a start node (BFS).
+    pub fn bfs_distances(&self, start_node: usize) -> Vec<Option<u32>> {
+        let num_nodes = self.adjacency_list.len();
+        let mut distances: Vec<Option<u32>> = vec![None; num_nodes];
+        let mut queue: VecDeque<usize> = VecDeque::new();
+
+        if start_node >= num_nodes {
+            return distances;
+        }
+
+        distances[start_node] = Some(0);
+        queue.push_back(start_node);
+
+        while let Some(current_node) = queue.pop_front() {
+            let current_dist = distances[current_node].unwrap();
+            for &neighbor in &self.adjacency_list[current_node] {
+                if distances[neighbor].is_none() {
+                    distances[neighbor] = Some(current_dist + 1);
+                    queue.push_back(neighbor);
+                }
+            }
+        }
+        distances
     }
 
     /// Creates a "particle" at a given node by initializing its local edge states.
@@ -203,7 +352,8 @@ impl EntangledSystem {
         if self.particles.len() < 2 {
             // Cannot measure if we don't have two particles.
             return FeedbackSignal {
-                error_distance: 1.0,
+                correlation_strength: 1.0,
+                //                error_distance: 1.0,
             };
         }
 
@@ -247,7 +397,7 @@ impl EntangledSystem {
         //   let phase_error = (average_state_b.arg() - expected_state_b.arg()).abs();
 
         FeedbackSignal {
-            error_distance: 1.0 - correlation as f64, // New field to represent error distance
+            correlation_strength: correlation as f64,
         }
     }
 }

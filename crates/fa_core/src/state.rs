@@ -69,5 +69,5 @@ pub struct EntropyPulse {
 pub struct FeedbackSignal {
     /// The absolute distance between the guess's metric and the ideal metric (0.25).
     /// The AI's goal is to minimize this value.
-    pub error_distance: f64,
+    pub correlation_strength: f64
 }

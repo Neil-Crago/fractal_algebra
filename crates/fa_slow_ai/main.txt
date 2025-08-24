@@ -1,9 +1,10 @@
 mod entangled_system;
 
-use entangled_system::{EntangledSystem, PulseSource};
 use fractal_algebra::FractalGraph;
 use rustfft::{FftPlanner, num_complex::Complex};
+use entangled_system::{PulseSource, EntangledSystem};
 use std::f64::consts::PI;
+
 
 // --- Data Structures ---
 pub struct EntropyPulse {
@@ -20,7 +21,7 @@ struct SignalComponent {
     amplitude: f64,
 }
 
-// --- The multi-frequency simulation I want to analyze ---
+// --- The multi-frequency simulation we want to analyze ---
 fn run_experiment_multi_frequency(pulse: &EntropyPulse) -> FeedbackSignal {
     const PRIMARY_B: f64 = 1.0;
     const PRIMARY_PHASE: f64 = PI / 2.0;
@@ -56,7 +57,8 @@ fn fft_analyze_waveform(samples: &[f64], step_size: f64) -> Vec<SignalComponent>
     for i in 1..(n / 2) {
         let amplitude = buffer[i].norm() * 2.0 / n as f64;
 
-        // It now correctly converts the FFT bin index to the 'B' parameter (angular frequency).
+        // *** THIS IS THE CORRECTED LINE ***
+        // It now correctly converts the FFT bin index to our 'B' parameter (angular frequency).
         let frequency = (i as f64 * 2.0 * PI) / (n as f64 * step_size);
 
         if amplitude > 0.05 {
@@ -70,20 +72,21 @@ fn fft_analyze_waveform(samples: &[f64], step_size: f64) -> Vec<SignalComponent>
     components
 }
 
-// Test Process:
-// Create a list of PulseSource objects,
-// pass them to apply_pulses,
+
+// Process: 
+// Create a list of PulseSource objects, 
+// pass them to apply_pulses, 
 // the system will simulate the resulting interference pattern across the entire graph.
 //
 // Test:
 // Create two PulseSources at different locations.
 // Set their phase_offset to be the same (e.g., 0.0).
 // Run apply_pulses.
-// Check the particle_states.
-// I should see the largest effect (a "hotspot") on the particles that are equidistant
+// Check the particle_states. 
+// I should see the largest effect (a "hotspot") on the particles that are equidistant 
 // from the two sources, where their waves interfere constructively.
-fn simulate_interference() {
-    println!("Running a verifiable test for interference...");
+fn part4_corrected_test() {
+    println!("\n[PART 4] Running a corrected, verifiable test for interference...");
 
     // 1. Define a graph with a true center point: an 11-node line.
     let num_nodes = 11;
@@ -96,10 +99,7 @@ fn simulate_interference() {
             adjacency_list[i].push(i + 1);
         }
     }
-    println!(
-        "[SETUP] Created an {}-node line graph for the test.",
-        num_nodes
-    );
+    println!("[SETUP] Created an {}-node line graph for the test.", num_nodes);
 
     // Create the system with our defined graph.
     let mut e = EntangledSystem {
@@ -142,10 +142,7 @@ fn simulate_interference() {
 
     println!("\n--- Test Results ---");
     println!("Raw particle states: {:?}", e.particle_states);
-    println!(
-        "\n[VERIFY] Hottest spot (max constructive interference) found at Node {}.",
-        hotspot_node_index
-    );
+    println!("\n[VERIFY] Hottest spot (max constructive interference) found at Node {}.", hotspot_node_index);
     println!("[VERIFY] Effect strength at hotspot: {:.4}", max_effect);
 
     // For an 11-node line (0-10), the middle point is 5.
@@ -156,67 +153,9 @@ fn simulate_interference() {
     }
 }
 
-//
-fn simulate_dimensional_interplay() {
-    println!();
-    println!("=== Dimensional Interplay Test ===");
-    println!("--- Testing the full QM <-> GR Feedback Loop ---");
-
-    // 1. Setup a predictable 11-node line graph.
-    let num_nodes = 11;
-    let mut adjacency_list = vec![vec![]; num_nodes];
-
-    for i in 0..num_nodes {
-        if i > 0 {
-            adjacency_list[i].push(i - 1);
-        }
-        if i < num_nodes - 1 {
-            adjacency_list[i].push(i + 1);
-        }
-    }
-    let mut system = EntangledSystem::new(10, 1, adjacency_list.clone());
-
-    println!("\n[INITIAL STATE]");
-    println!(
-        "Connections for Node 5 (center): {:?}",
-        system.adjacency_list[5]
-    );
-
-    // 2. Act (QM): Create a hotspot at the center node (5).
-    let sources = vec![
-        PulseSource {
-            location_node_index: 0,
-            amplitude: 1.0,
-            phase_offset: 0.0,
-        },
-        PulseSource {
-            location_node_index: 10,
-            amplitude: 1.0,
-            phase_offset: 0.0,
-        },
-    ];
-
-    system.apply_pulses(&sources);
-    println!("\n[QM STEP] Interference pattern generated. Hotspot created at center.");
-    println!("Particle states: {:?}", system.particle_states);
-
-    // 3. React (GR): Update the graph based on the new energy states.
-    // I connect any two active nodes that are within 4 steps of each other.
-    println!("\n[GR STEP] Updating spacetime curvature based on energy hotspots...");
-    system.update_curvature(0.5, 4); // Threshold > 0.5, Max Distance = 4
-
-    println!("\n[FINAL STATE]");
-    println!(
-        "Connections for Node 5 (center): {:?}",
-        system.adjacency_list[5]
-    );
-}
-
 fn main() {
-    println!();
     println!("--- Slow AI 2.0: Scan & Analyze Sequence Initiated ---");
-    println!("--------------------------------------------------");
-    println!("Part 1 Test");
+
     // === Part 1: High-Resolution Data Acquisition ===
     let num_samples = 256;
     let step_size = 0.05;
@@ -237,18 +176,15 @@ fn main() {
             feedback.correlation_strength
         })
         .collect();
-
     println!("[SCAN] Data acquisition complete.");
-    println!("--------------------------------------------------");
-    println!("Part 2 Test");
+
     // === Part 2: FFT Signal Processing ===
     println!("\n[ANALYZE] Decomposing signal with CORRECTED FFT...");
     // Pass step_size instead of sample_rate, as the new formula uses it directly.
     let components = fft_analyze_waveform(&collected_data, step_size);
     println!("[ANALYZE] Analysis complete.");
-    println!("--------------------------------------------------");
+
     // === Part 3: Conclusion ===
-    println!("Part 3 Test");
     println!("\n--- AI Signal Analysis Report ---");
     println!("--------------------------------------------------");
     for (i, comp) in components.iter().enumerate() {
@@ -278,13 +214,5 @@ fn main() {
         println!("\nConclusion: No significant signals were detected.");
     }
 
-    println!("--------------------------------------------------");
-    // part 4 test
-    println!("Part 4 Test\n");
-    simulate_interference();
-    println!("--------------------------------------------------");
-    // part 5 test
-    println!("Part 5 Test");
-    simulate_dimensional_interplay();
-    println!();
+    part4_corrected_test();
 }
