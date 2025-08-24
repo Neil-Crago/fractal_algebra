@@ -10,7 +10,7 @@ keywords = ["AI", "fractal", "Bayesian"]
 description = "A slow AI implementation using fractal algebra."
 
 [dependencies]
-fractal_algebra = "0.2.8"
+fractal_algebra = "0.2.7"
 num-complex = "0.4.6"
 rustfft = "6.4.0"
 rand = "0.9.2"
