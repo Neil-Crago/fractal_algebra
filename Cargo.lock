@@ -339,7 +339,7 @@ dependencies = [
 
 [[package]]
 name = "fractal_algebra"
-version = "0.2.8"
+version = "0.2.9"
 dependencies = [
  "factorial_engine 0.1.3",
  "num-complex",
