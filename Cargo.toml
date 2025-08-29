@@ -4,7 +4,6 @@ members = [
     "crates/factorial_engine",
     "crates/fractal_algebra",
     "crates/tma_engine",
-    "crates/fa_slow_ai",
     "examples/sierpinski",   
     "examples/fast_fac",
     "examples/mandelbrot"] 
