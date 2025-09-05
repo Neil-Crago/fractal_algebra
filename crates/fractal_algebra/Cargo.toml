@@ -5,7 +5,7 @@ edition = "2024"
 authors =  ["Neil Crago"]
 description = "A library for fractal algebra experimentation"
 license = "MIT OR Apache-2.0"
-repository = "https://github.com/Neil-Crago/fractal_algebra"
+repository = "https://github.com/Neil-Crago/fractal_algebra/tree/master/crates/fractal_algebra"
 documentation = "https://docs.rs/fractal_algebra"
 keywords = ["fractal", "algebra", "resonance", "FractalGraph", "mutation"]
 
