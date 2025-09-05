@@ -1,24 +1,25 @@
-/// Represents the state of a point in our fractal universe.
-/// The dimensionality is encoded directly in the type of the coordinate.
+//! A conceptual model for a fractal spacetime that can evolve through different states.
+
+/// Represents the state of a point in a simulated universe.
+/// The dimensionality is encoded directly in the enum variant.
 pub enum SpacetimeCoordinate {
     /// A 1-dimensional reality, defined by a single sequence point.
     Sequential(f64),
-
-    /// A 4-dimensional reality, defined by a point in Minkowski spacetime.
-    /// We use a tuple: (time, x, y, z).
+    /// A 4-dimensional reality, defined by a point in Minkowski spacetime (t, x, y, z).
     Minkowski(f64, f64, f64, f64),
-    // We could even add others later, like a 2D complex plane.
-    // ComplexPlane(Complex<f64>),
 }
 
-/// The core struct now simply holds the current coordinate state.
+/// A struct that holds the current coordinate state of the simulated spacetime.
 pub struct FractalSpacetime {
     pub coordinate: SpacetimeCoordinate,
 }
 
+/// A trait for objects that can evolve over time.
 pub trait Evolvable {
     type EnergyOutput;
+    /// A catastrophic event that transitions a 1D universe to a 4D one, releasing energy.
     fn transition_to_4d(&mut self) -> Self::EnergyOutput;
+    /// A single step forward in time.
     fn tick(&mut self);
 }
 
@@ -26,18 +27,14 @@ impl Evolvable for FractalSpacetime {
     type EnergyOutput = Vec<f64>; // Represents the primordial waveform
 
     fn transition_to_4d(&mut self) -> Self::EnergyOutput {
-        // The transition only happens if we are in a 1D state.
         if let SpacetimeCoordinate::Sequential(initial_state) = self.coordinate {
-            // The new 4D state starts at time 0, at the origin.
             self.coordinate = SpacetimeCoordinate::Minkowski(0.0, 0.0, 0.0, 0.0);
-
-            // The energy released is a function of the 1D state we came from.
-            // This is where the primordial waveform is generated.
-            let energy = vec![initial_state.sin(), initial_state.cos()]; // Placeholder
-            return energy;
+            // The energy released is a function of the 1D state, generating a waveform.
+            vec![initial_state.sin(), initial_state.cos()] // Placeholder
+        } else {
+            // If already in 4D, no transition occurs.
+            vec![]
         }
-        // If we're already in 4D, do nothing and release no energy.
-        vec![]
     }
 
     fn tick(&mut self) {

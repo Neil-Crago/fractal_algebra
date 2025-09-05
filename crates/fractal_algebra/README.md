@@ -118,3 +118,4 @@ These include:-
   * tma_engine
   * factorial_engine
   * fa_slow_ai
+  * Coheron
