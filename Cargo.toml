@@ -1,6 +1,6 @@
 [package]
 name = "fractal_algebra"
-version = "0.3.3"
+version = "0.3.4"
 edition = "2024"
 authors =  ["Neil Crago"]
 description = "A library for fractal algebra experimentation"
