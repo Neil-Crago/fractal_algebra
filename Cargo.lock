@@ -22,7 +22,7 @@ checksum = "ee48d52cbd93014b5ba25344778038ef1a76b918713223f163767dc40c479eb9"
 
 [[package]]
 name = "fractal_algebra"
-version = "0.3.4"
+version = "0.3.5"
 dependencies = [
  "factorial_engine",
  "num-complex",
